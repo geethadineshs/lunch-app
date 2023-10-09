@@ -1,7 +1,18 @@
-import 'package:acs_lunch/app/Screens/Splash/splashview.dart';
-import 'package:flutter/material.dart';
+import 'package:acsfoodapp/const/routeconst.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-void main() => runApp(new MaterialApp(
-      home: Splashscreen(),
+
+void main() {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  runApp(
+    GetMaterialApp(
+      initialRoute: Routeconst.initalpath,
       debugShowCheckedModeBanner: false,
-    ));
+      getPages: Routeconst.route,
+    ),
+  );
+  FlutterNativeSplash.remove();
+}
