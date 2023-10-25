@@ -1,5 +1,5 @@
+import 'package:acsfoodapp/pages/Lunchbooking/lunchcontroller.dart';
 import 'package:get/get.dart';
-import 'lunchcontroller.dart';
 
 class LunchBinging extends Bindings
 {

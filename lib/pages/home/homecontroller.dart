@@ -1,15 +1,14 @@
 import 'dart:convert';
+
+import 'package:acsfoodapp/const/resourceconst.dart';
+import 'package:acsfoodapp/const/stringconst.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer' as d;
-
-import '../../const/resourceconst.dart';
-import '../../const/stringconst.dart';
-
-class Homecontroller extends GetxController {
+class Homecontroller extends GetxController{
   var current_monthcount = 0.obs;
   var prev_monthcont = 0.obs;
   var amount = 0.obs;
@@ -17,7 +16,7 @@ class Homecontroller extends GetxController {
   var name = "".obs;
   var month = "".obs;
   var prev_month = "".obs;
-  var isbooked = false.obs;
+  var isbooked=false.obs;
 
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -35,7 +34,8 @@ class Homecontroller extends GetxController {
     var response = await current_month_lunch_count();
     if (response == 0 || response == -1) {
       print("api call error");
-    } else {
+    } else
+    {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var username = prefs.getString('userid');
       name.value = username as String;
@@ -66,21 +66,31 @@ class Homecontroller extends GetxController {
       prev_monthcont.value = spendtime.length;
       prev_amount.value = spendtime.length * 10;
     }
-    var isBooked = await precheck();
+    var isBooked=await precheck();
     if (isBooked == 0 || isBooked == -1) {
-    } else {
-      try {
-        DateTime now = DateTime.now();
-        if (isBooked["time_entries"][0]["spent_on"] ==
-            DateFormat('yyyy-MM-dd').format(now).toString()) {
-          this.isbooked.value = true;
-        } else {
-          this.isbooked.value = false;
-        }
-      } catch (e) {
-        this.isbooked.value = false;
-      }
+
     }
+    else
+    {
+      try{
+        DateTime now = DateTime.now();
+        if(isBooked["time_entries"][0]["spent_on"]==DateFormat('yyyy-MM-dd').format(now).toString())
+        {
+          this.isbooked.value=true;
+        }
+        else {
+          this.isbooked.value=false;
+        }
+      }
+      catch(e) {
+        this.isbooked.value=false;
+      }
+
+
+    }
+
+
+
   }
 
   getusercredential() async {
@@ -88,26 +98,29 @@ class Homecontroller extends GetxController {
     var key = prefs.getString('key');
     return key;
   }
-
-  getuserid() async {
+  getuserid() async
+  {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var user = prefs.getString(Appstring.loginid);
     return user;
   }
 
   current_month_lunch_count() async {
-    var userid = await getuserid();
+    var userid= await getuserid();
     var key = await getusercredential();
     d.log(userid);
-    var Month = 'm';
-    var endpoint = Uri.encodeFull(Resource.baseurl +
-        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${Month}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
+    var Month='m';
+    var endpoint=Uri.encodeFull( Resource.baseurl + '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$Month&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
 
     try {
-      final responce = await http.get(Uri.parse(endpoint), headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Basic $key",
-      });
+      final responce = await http.get(
+          Uri.parse(
+         endpoint
+          ),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Basic $key",
+          });
       if (responce.statusCode == 200) {
         final decodestring = jsonDecode(responce.body);
         return decodestring;
@@ -121,24 +134,26 @@ class Homecontroller extends GetxController {
 
   prevs_month_lunch_count() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userid = await getuserid();
+    String? userid= await getuserid();
     var filter = 'lm';
     // https://pm.agilecyber.co.uk/projects/lunch/time_entries?utf8=✓&set_filter=1&sort=spent_on:desc&f[]=spent_on&op[spent_on]=lm&f[]=user_id&op[user_id]==&v[user_id][]=153
     // op[spent_on]=m - current month
     // op[spent_on]=lm - last month
 
-    var url = Uri.encodeFull(Resource.baseurl +
-        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${filter}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
+    var url=Uri.encodeFull( Resource.baseurl + '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$filter&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
     var key = await getusercredential();
     try {
       d.log(url);
 
-      final response = await http.get(Uri.parse(url), headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Basic $key",
-      });
+
+      final response = await http.get(
+          Uri.parse(url),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Basic $key",
+          });
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        return json.decode(response.body) ;
       } else {
         return 0;
       }
@@ -148,7 +163,7 @@ class Homecontroller extends GetxController {
   }
 
   booklunch() {
-    var is_lunche_booked = precheck();
+    var isLuncheBooked =precheck();
     DateTime currentDate = DateTime.now();
     var time = DateFormat.Hm().format(currentDate);
     int hour = int.parse(time.split(":")[0]);
@@ -165,7 +180,7 @@ class Homecontroller extends GetxController {
       } else {
         Get.offAndToNamed(Appstring.foodorder);
       }
-    } else if (hour >= 12) {
+    } else if (hour >=12) {
       Get.toNamed(Appstring.foodorder);
       Get.snackbar("Time is up", "Book in redmine sorry for inconvenience",
           icon: Icon(Icons.close, color: Color.fromARGB(255, 165, 17, 17)),
@@ -180,26 +195,26 @@ class Homecontroller extends GetxController {
       //     snackStyle: SnackStyle.FLOATING);
     }
   }
-
   precheck() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userid = await getuserid();
+    String? userid= await getuserid();
     var filter = 't';
     // https://pm.agilecyber.co.uk/projects/lunch/time_entries?utf8=✓&set_filter=1&sort=spent_on:desc&f[]=spent_on&op[spent_on]=lm&f[]=user_id&op[user_id]==&v[user_id][]=153
     // op[spent_on]=m - current month
     // op[spent_on]=lm - last month
     // op[spent_on]=t -today
 
-    var url = Uri.encodeFull(Resource.baseurl +
-        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${filter}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
+    var url=Uri.encodeFull( Resource.baseurl + '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$filter&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
     var key = await getusercredential();
     try {
-      final response = await http.get(Uri.parse(url), headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Basic $key",
-      });
+      final response = await http.get(
+          Uri.parse(url),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Basic $key",
+          });
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        return json.decode(response.body) ;
       } else {
         return 0;
       }
@@ -207,7 +222,6 @@ class Homecontroller extends GetxController {
       return -1;
     }
   }
-
   cancel() async {
     var key = await getusercredential();
     DateTime currentDate = DateTime.now();

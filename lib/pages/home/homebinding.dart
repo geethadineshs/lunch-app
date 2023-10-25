@@ -1,6 +1,6 @@
+import 'package:acsfoodapp/pages/Lunchbooking/lunchcontroller.dart';
+import 'package:acsfoodapp/pages/home/homecontroller.dart';
 import 'package:get/get.dart';
-import '../Lunchbooking/lunchcontroller.dart';
-import 'homecontroller.dart';
 
 class Homebinging extends Bindings {
   @override

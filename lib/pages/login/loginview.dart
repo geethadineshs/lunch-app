@@ -1,7 +1,7 @@
+import 'package:acsfoodapp/pages/login/logincontroller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:test_app/pages/login/logincontroller.dart';
 class LogininView extends GetView<LoginController> {
   LogininView({Key? key}) : super(key: key);
   final formkey = GlobalKey<FormState>();
