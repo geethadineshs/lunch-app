@@ -1,4 +1,3 @@
-import 'package:acsfoodapp/const/resourceconst.dart';
 import 'package:acsfoodapp/pages/splash/splashcontroller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

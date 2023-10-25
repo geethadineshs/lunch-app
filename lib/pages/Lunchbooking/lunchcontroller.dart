@@ -159,7 +159,7 @@ class LunchController extends GetxController {
       // op[spent_on]=lm - last month
       // op[spent_on]=t -today
 
-      var endpoint=Uri.encodeFull( Resource.baseurl + '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${prevMonth}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
+      var endpoint=Uri.encodeFull( Resource.baseurl + '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$prevMonth&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
       var key = await getusercredential();
       try {
         final responce = await http.get(

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:developer' as d;
 class LoginController extends GetxController {
   // Obtain shared preferences.
   var showpassword = true.obs;

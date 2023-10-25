@@ -110,7 +110,7 @@ class Homecontroller extends GetxController{
     var key = await getusercredential();
     d.log(userid);
     var Month='m';
-    var endpoint=Uri.encodeFull( Resource.baseurl + '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${Month}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
+    var endpoint=Uri.encodeFull( Resource.baseurl + '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$Month&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
 
     try {
       final responce = await http.get(
@@ -140,7 +140,7 @@ class Homecontroller extends GetxController{
     // op[spent_on]=m - current month
     // op[spent_on]=lm - last month
 
-    var url=Uri.encodeFull( Resource.baseurl + '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${filter}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
+    var url=Uri.encodeFull( Resource.baseurl + '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$filter&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
     var key = await getusercredential();
     try {
       d.log(url);
@@ -163,7 +163,7 @@ class Homecontroller extends GetxController{
   }
 
   booklunch() {
-    var is_lunche_booked =precheck();
+    var isLuncheBooked =precheck();
     DateTime currentDate = DateTime.now();
     var time = DateFormat.Hm().format(currentDate);
     int hour = int.parse(time.split(":")[0]);
@@ -204,7 +204,7 @@ class Homecontroller extends GetxController{
     // op[spent_on]=lm - last month
     // op[spent_on]=t -today
 
-    var url=Uri.encodeFull( Resource.baseurl + '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${filter}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
+    var url=Uri.encodeFull( Resource.baseurl + '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$filter&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
     var key = await getusercredential();
     try {
       final response = await http.get(
