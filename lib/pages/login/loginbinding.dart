@@ -1,5 +1,6 @@
-import 'package:acsfoodapp/pages/login/logincontroller.dart';
 import 'package:get/get.dart';
+
+import 'logincontroller.dart';
 
 class Loginbinding extends Bindings
 {

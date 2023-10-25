@@ -12,4 +12,6 @@ class Appstring {
   static const passwordinputfiled="Password*";
   static const erormessageforusername="";
   static const loginid='loginid';
+  static const TeaCoffee="/teacoffee";
+  
 }

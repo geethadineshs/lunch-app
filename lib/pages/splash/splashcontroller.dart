@@ -1,8 +1,7 @@
 import 'dart:async';
-
-import 'package:acsfoodapp/const/stringconst.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../const/stringconst.dart';
 class SplashController extends GetxController {
   onload() async {
 

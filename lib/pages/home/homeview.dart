@@ -1,9 +1,9 @@
-import 'package:acsfoodapp/const/stringconst.dart';
-import 'package:acsfoodapp/pages/home/homecontroller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../const/Appcolor.dart';
+import '../../const/stringconst.dart';
+import 'homecontroller.dart';
 
 class HomeView extends GetView<Homecontroller> {
   HomeView({Key? key}) : super(key: key) {
@@ -23,9 +23,7 @@ class HomeView extends GetView<Homecontroller> {
         },
         child: _body(context),
       ),
-      floatingActionButton: Obx(() => controller.isbooked.value == true
-          ? _floattingcancell()
-          : _flotting()),
+      floatingActionButton:  _flotting(),
     );
   }
 
@@ -83,8 +81,8 @@ class HomeView extends GetView<Homecontroller> {
         child: Column(
       children: [
         _prevsinfo(context),
-        _monthinfo(context),
-        _empty(),
+        // _monthinfo(context),
+        // _empty(),
         _todayBooking()
       ],
     ));
@@ -189,7 +187,7 @@ class HomeView extends GetView<Homecontroller> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 5),
-                child: Obx(() => Text(controller.currentMonthCount.toString())),
+                child: Obx(() => Text(controller.current_monthcount.value.toString())),
               ),
             ],
           ),
@@ -201,7 +199,7 @@ class HomeView extends GetView<Homecontroller> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 5),
-                child: Obx(() => Text(controller.amount.toString())),
+                child: Obx(() => Text(controller.amount.value.toString())),
               ),
             ],
           ),
@@ -215,7 +213,7 @@ class HomeView extends GetView<Homecontroller> {
       child: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Obx(() => Text(
-              controller.previousMonth.value.toString(),
+              controller.prev_monthcont.value.toString(),
               style: TextStyle(
                   color: AppColors.siteBlue, fontWeight: FontWeight.w600),
             )),
@@ -237,7 +235,7 @@ class HomeView extends GetView<Homecontroller> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 5),
-                child: Obx(() => Text(controller.prevMonthCount.toString())),
+                child: Obx(() => Text(controller.prev_monthcont.value.toString())),
               ),
             ],
           ),
@@ -250,7 +248,7 @@ class HomeView extends GetView<Homecontroller> {
               Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child:
-                    Obx(() => Text(controller.previousMonthAmount.toString())),
+                    Obx(() => Text(controller.prev_amount.value.toString())),
               ),
             ],
           ),

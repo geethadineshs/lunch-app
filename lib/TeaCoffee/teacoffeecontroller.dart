@@ -1,45 +1,102 @@
+// import 'dart:convert';
+// import 'dart:html';
+// import 'package:get/get.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+// // Import the intl package for DateFormat
+// import 'package:http/http.dart' as http;
+// import 'package:test_app/const/resourceconst.dart';
+
+// class TeaCoffeeController extends GetxController {
+//   var noselected = 'chapathi'.obs;
+//   var selected = "".obs;
+//   var extra= ''.obs;
+//   RxList mainiteams = [].obs;
+//   RxList extraiteam = [].obs;
+//   Future<void> fetchData(date) async {
+//     var foodoption = mainiteams.indexOf(selected.value) + 1;
+//     var extra= extraiteam.indexOf(selected.value)+1;
+//     var key = await getusercredential();
+//     var getbody = await postbody(foodoption,extra);
+//     var body = jsonEncode(getbody);
+//     final response = await http.post(
+//       Uri.parse(Resource.baseurl + Resource.booking),
+//       headers: {
+//         "Content-Type": "application/json",
+//         "Authorization": "Basic $key",
+//       },
+//        body: body,
+//     );
+//     try {
+//       // final response = await http.get(url, headers: headers);
+
+//       if (response.statusCode == 200) {
+//         final data = json.decode(response.body);
+//         print(data);
+//       } else {
+//         // Handle errors here
+//         print("Failed to load data. Status code: ${response.statusCode}");
+//       }
+//     } catch (e) {
+//       // Handle network or other exceptions
+//       print("Error: $e");
+//     }
+//   }
+
+//   Future<String?> getusercredential() async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     return prefs.getString('key');
+//   }
+  
+
+//   postbody(foodcode,extra) {
+//     return {
+//       "time_entry": {
+//         "project_id": 342,
+//         "hours": 0,
+//         "activity_id": 16,
+//         "custom_fields": [
+//           {"id": 39, "value": 1},
+//           {"id": 41, "value": 0},
+//           {"id": 59, "value": "Non Billable"},
+//         ],
+//         "comments": ""
+//       }
+//     };
+
+//     // {"time_entry":{"project_id":342,"hours":0,"activity_id":16,"custom_fields":[{"id":39,"value":1},{"id":41,"value":0},{"id":59,"value":"Non Billable"}],"comments":""}}
+//   }
+// }
+
+
+
+
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:table_calendar/table_calendar.dart';
 import '../../const/resourceconst.dart';
 import '../../const/stringconst.dart';
 
-class LunchController extends GetxController {
+class TeaCoffeeController extends GetxController {
   var isbooked = false.obs;
   var isloading = false.obs;
-
-  get selectedDish => null;
-
-  get extraDish => null;
-  
-  get extraItems => null;
   booked() {
     // isbooked.toggle();
   }
 
   var noselected = 'chapathi'.obs;
   var selected = "".obs;
-  var extra = ''.obs;
-  var  getbody;
+  var extra= ''.obs;
   RxList mainiteams = [].obs;
   RxList extraiteam = [].obs;
-  Rx<TextEditingController> startdate = TextEditingController().obs;
-  Rx<TextEditingController> enddate = TextEditingController().obs;
-
-  booklunch(selectedDateStrings) async {
+  booklunch() async {
     var foodoption = mainiteams.indexOf(selected.value) + 1;
-    var extra = extraiteam.indexOf(selected.value) + 1;
-    var key = await getUserCredential();
-   for( var i in selectedDateStrings){
-    var body = jsonEncode(postbody(foodoption, extra,i));
+    var extra= extraiteam.indexOf(selected.value)+1;
+    var key = await getusercredential();
+    var getbody = await postbody(foodoption,extra);
+    var body = jsonEncode(getbody);
     // print(body.runtimeType);
-    print(body);
-    //  print("Booking date: $i");
-    // print("Date: $i");
     try {
       final response = await http.post(
         Uri.parse(
@@ -54,23 +111,20 @@ class LunchController extends GetxController {
       //print(await response);
 
       if (response.statusCode == 200) {
-        // DateTime currentDate = DateTime.now();
-        // var currentdate = DateFormat("yyyy-MM-dd").format(
-        //     DateTime(currentDate.year, currentDate.month, currentDate.day));
-        // SharedPreferences prefs = await SharedPreferences.getInstance();
-        // await prefs.setString(currentdate.toString(), currentdate.toString());
-         //return response.statusCode;
+        DateTime currentDate = DateTime.now();
+        var currentdate = DateFormat("yyyy-MM-dd").format(
+            DateTime(currentDate.year, currentDate.month, currentDate.day));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString(currentdate.toString(), currentdate.toString());
+        return response.statusCode;
       } else {
-        //return response.statusCode;
-        // print("Failed to book date: $i (Status Code: ${response.statusCode})");
+        return response.statusCode;
       }
     } catch (e) {
-        // print("Error while booking date: $i ($e)");
       return -1;
     }
-    
   }
-  }
+
   init() async {
     var responce = await _menuapi();
     var costumfile = responce["custom_fields"];
@@ -92,23 +146,22 @@ class LunchController extends GetxController {
     }
     for (var extra in extrafooditem) {
       var labeitem = extra["label"];
-      extraItems.add(labeitem);
+      extraiteam.add(labeitem);
     }
   }
 
-  getUserCredential() async {
+  getusercredential() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var key = prefs.getString('key');
     return key;
   }
 
-  postbody(foodcode, extra, startDate) {
+  postbody(foodcode,extra) {
     return {
       "time_entry": {
         "project_id": 342,
         "hours": 0,
         "activity_id": 16,
-        "spent_on":startDate,
         "custom_fields": [
           {"id": 39, "value": 1},
           {"id": 41, "value": foodcode},
@@ -121,7 +174,7 @@ class LunchController extends GetxController {
   }
 
   cancel() async {
-    var key = await getUserCredential();
+    var key = await getusercredential();
     DateTime currentDate = DateTime.now();
     var currentdate = DateFormat("yyyy-MM-dd")
         .format(DateTime(currentDate.year, currentDate.month, currentDate.day));
@@ -165,21 +218,16 @@ class LunchController extends GetxController {
       return -1;
     }
   }
-    // https://pm.agilecyber.co.uk/projects/lunch/time_entries?utf8=✓&set_filter=1&sort=spent_on:desc&f[]=spent_on&op[spent_on]=lm&f[]=user_id&op[user_id]==&v[user_id][]=153
-    // op[spent_on]=m - current month
-    // op[spent_on]=lm - last month
-    // op[spent_on]=t -today
+   precheck() async {
+      String? userid= await getuserid();
+      var prevMonth = 't';
+      // https://pm.agilecyber.co.uk/projects/lunch/time_entries?utf8=✓&set_filter=1&sort=spent_on:desc&f[]=spent_on&op[spent_on]=lm&f[]=user_id&op[user_id]==&v[user_id][]=153
+      // op[spent_on]=m - current month
+      // op[spent_on]=lm - last month
+      // op[spent_on]=t -today
 
-  precheck() async {
-    String? userid = await getuserid();
-    var prevMonth = 't';
-    // https://pm.agilecyber.co.uk/projects/lunch/time_entries?utf8=✓&set_filter=1&sort=spent_on:desc&f[]=spent_on&op[spent_on]=lm&f[]=user_id&op[user_id]==&v[user_id][]=153
-    // op[spent_on]=m - current month
-    // op[spent_on]=lm - last month
-    // op[spent_on]=t -today
-
-      var endpoint=Uri.encodeFull( Resource.baseurl + '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$prevMonth&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
-      var key = await getUserCredential();
+      var endpoint=Uri.encodeFull( Resource.baseurl + '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${prevMonth}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
+      var key = await getusercredential();
       try {
         final responce = await http.get(
             Uri.parse(endpoint),

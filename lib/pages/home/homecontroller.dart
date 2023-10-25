@@ -1,7 +1,4 @@
 import 'dart:convert';
-
-import 'package:acsfoodapp/const/resourceconst.dart';
-import 'package:acsfoodapp/const/stringconst.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
@@ -9,15 +6,19 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer' as d;
 
+import '../../const/resourceconst.dart';
+import '../../const/stringconst.dart';
+
 class Homecontroller extends GetxController {
-  var currentMonthCount = 0.obs;
-  var prevMonthCount = 0.obs;
+  var current_monthcount = 0.obs;
+  var prev_monthcont = 0.obs;
   var amount = 0.obs;
-  var previousMonthAmount = 0.obs;
+  var prev_amount = 0.obs;
   var name = "".obs;
   var month = "".obs;
-  var previousMonth = "".obs;
+  var prev_month = "".obs;
   var isbooked = false.obs;
+
 
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -31,8 +32,8 @@ class Homecontroller extends GetxController {
     DateTime currentDate = DateTime.now();
     var prev = DateTime(currentDate.year, currentDate.month - 1, 1);
     var premonth = DateFormat.MMMM().format(prev);
-    previousMonth.value = premonth;
-    var response = await currentMonthLunchCount();
+    prev_month.value = premonth;
+    var response = await current_month_lunch_count();
     if (response == 0 || response == -1) {
       print("api call error");
     } else {
@@ -48,23 +49,23 @@ class Homecontroller extends GetxController {
 
       //print(spendtime.length);
 
-      currentMonthCount.value = spendtime.length;
+      current_monthcount.value = spendtime.length;
       amount.value = spendtime.length * 10;
 
       //print(name.value);
       //print(responce["total_count"].runtimeType);
     }
-    var prevResponse = await prevMonthLunchCount();
-    if (prevResponse == 0 || prevResponse == -1) {
+    var prevresponc = await prevs_month_lunch_count();
+    if (prevresponc == 0 || prevresponc == -1) {
       print("Api error");
     } else {
       Set spendtime = {};
-      var timeentry = prevResponse["time_entries"];
+      var timeentry = prevresponc["time_entries"];
       for (var time in timeentry) {
         spendtime.add(time["spent_on"]);
       }
-      prevMonthCount.value = spendtime.length;
-      previousMonthAmount.value = spendtime.length * 10;
+      prev_monthcont.value = spendtime.length;
+      prev_amount.value = spendtime.length * 10;
     }
     var isBooked = await precheck();
     if (isBooked == 0 || isBooked == -1) {
@@ -83,7 +84,7 @@ class Homecontroller extends GetxController {
     }
   }
 
-  getUserCredential() async {
+  getusercredential() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var key = prefs.getString('key');
     return key;
@@ -95,12 +96,13 @@ class Homecontroller extends GetxController {
     return user;
   }
 
-  currentMonthLunchCount() async {
+  current_month_lunch_count() async {
     var userid = await getuserid();
-    var key = await getUserCredential();
+    var key = await getusercredential();
     d.log(userid);
+    var Month = 'm';
     var endpoint = Uri.encodeFull(Resource.baseurl +
-        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=m&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
+        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${Month}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
 
     try {
       final responce = await http.get(Uri.parse(endpoint), headers: {
@@ -118,8 +120,8 @@ class Homecontroller extends GetxController {
     }
   }
 
-  //
-  prevMonthLunchCount() async {
+  prevs_month_lunch_count() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userid = await getuserid();
     var filter = 'lm';
     // https://pm.agilecyber.co.uk/projects/lunch/time_entries?utf8=✓&set_filter=1&sort=spent_on:desc&f[]=spent_on&op[spent_on]=lm&f[]=user_id&op[user_id]==&v[user_id][]=153
@@ -127,8 +129,8 @@ class Homecontroller extends GetxController {
     // op[spent_on]=lm - last month
 
     var url = Uri.encodeFull(Resource.baseurl +
-        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$filter&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
-    var key = await getUserCredential();
+        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${filter}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
+    var key = await getusercredential();
     try {
       d.log(url);
 
@@ -147,6 +149,7 @@ class Homecontroller extends GetxController {
   }
 
   booklunch() {
+    var is_lunche_booked = precheck();
     DateTime currentDate = DateTime.now();
     var time = DateFormat.Hm().format(currentDate);
     int hour = int.parse(time.split(":")[0]);
@@ -180,6 +183,7 @@ class Homecontroller extends GetxController {
   }
 
   precheck() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userid = await getuserid();
     var filter = 't';
     // https://pm.agilecyber.co.uk/projects/lunch/time_entries?utf8=✓&set_filter=1&sort=spent_on:desc&f[]=spent_on&op[spent_on]=lm&f[]=user_id&op[user_id]==&v[user_id][]=153
@@ -188,8 +192,8 @@ class Homecontroller extends GetxController {
     // op[spent_on]=t -today
 
     var url = Uri.encodeFull(Resource.baseurl +
-        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$filter&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
-    var key = await getUserCredential();
+        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${filter}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
+    var key = await getusercredential();
     try {
       final response = await http.get(Uri.parse(url), headers: {
         "Content-Type": "application/json",
@@ -206,7 +210,7 @@ class Homecontroller extends GetxController {
   }
 
   cancel() async {
-    var key = await getUserCredential();
+    var key = await getusercredential();
     DateTime currentDate = DateTime.now();
     var currentdate = DateFormat("yyyy-MM-dd")
         .format(DateTime(currentDate.year, currentDate.month, currentDate.day));
