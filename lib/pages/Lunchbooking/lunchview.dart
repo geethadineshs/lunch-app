@@ -8,7 +8,6 @@ import 'lunchcontroller.dart';
 import 'package:intl/intl.dart';
 
 class LunchView extends GetView<LunchController> {
-  
   LunchView({Key? key}) : super(key: key) {
     controller.init();
   }
@@ -52,19 +51,16 @@ class LunchView extends GetView<LunchController> {
           _dropdown1(),
           Padding(padding: const EdgeInsets.all(20.0)),
 
-       SfDateRangePicker(
+        SfDateRangePicker(
   selectionMode: DateRangePickerSelectionMode.range,
   selectableDayPredicate: (DateTime date) {
-    final now = DateTime.now();
     // Allow selection of all dates except Saturdays and Sundays
-    if (date.weekday == DateTime.saturday || date.weekday == DateTime.sunday) {
-      return false;
-    }
-    return true; // Allow selection of all other days
+    return date.weekday != DateTime.saturday && date.weekday != DateTime.sunday;
   },
   minDate: DateTime.now(),
   onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-    selectedDates.clear();
+    selectedDates.clear(); // Clear the list before adding new dates
+    DateTime now = DateTime.now();
     for (int i = args.value.startDate.day;
         i <= args.value.endDate.day;
         i++) {
@@ -75,23 +71,12 @@ class LunchView extends GetView<LunchController> {
         selectedDates.add(selectedDate);
       }
     }
-
-    if (selectedDates.length > 15) {
-      // Show a snack bar if more than 15 days are selected
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please choose only 15 days.'),
-        ),
-      );
-    }
-
     selectedDateStrings = selectedDates
         .map((date) => date.toString().split(' ')[0])
         .toList();
     print(selectedDateStrings);
   },
 )
-
 
 
           // if (pickedStartDate != null) {
@@ -224,7 +209,7 @@ class LunchView extends GetView<LunchController> {
                   borderSide:
                       BorderSide(color: Colors.indigoAccent, width: 1))),
           items: [
-            for (var data in controller.mainItems.value)
+            for (var data in controller.mainiteams.value)
               DropdownMenuItem(
                 child: Text(data),
                 value: data,
@@ -244,7 +229,7 @@ class LunchView extends GetView<LunchController> {
                   borderSide:
                       BorderSide(color: Colors.indigoAccent, width: 1))),
           items: [
-            for (var data in controller.extraItems.value)
+            for (var data in controller.extraiteam.value)
               DropdownMenuItem(
                 child: Text(data),
                 value: data,
@@ -256,36 +241,28 @@ class LunchView extends GetView<LunchController> {
 
   List<DateTime> selectedDates = [];
   var selectedDateStrings;
-floatingbutton(BuildContext context) {
-  return FloatingActionButton.extended(
-    onPressed: () async {
-      if (controller.selected.value.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Please select your dish and calendar dates.'),
-          ),
-        );
-      } else {
-        var response = await controller.booklunch(selectedDateStrings);
-        if (response == 200) {
-          controller.booked();
-          Future.delayed(Duration.zero, () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Your lunch has been booked successfully.'),
-              ),
-            );
-          });
-          Get.offAndToNamed(Appstring.home);
+  floatingbutton(context) {
+    return FloatingActionButton.extended(
+      onPressed: () async {
+        if (controller.selected.value.isEmpty) {
+          // Show a snack bar when any of the fields are empty
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Please select your dish and calendar dates.'),
+            ),
+          );
+        } else {
+          var response = await controller.booklunch(selectedDateStrings);
+          if (response == 200) {
+            controller.booked();
+            Get.offAndToNamed(Appstring.home);
+          }
         }
-      }
-    },
-    label: Text("Book Lunch"),
-    icon: Icon(Icons.breakfast_dining),
-  );
-}
-
-
+      },
+      label: Text("Book Lunch"),
+      icon: Icon(Icons.breakfast_dining),
+    );
+  }
 
   Widget _mainmanu(BuildContext context) {
     return context != null
@@ -294,15 +271,11 @@ floatingbutton(BuildContext context) {
             width: MediaQuery.of(context).size.width,
             child: Padding(
               padding: const EdgeInsets.only(left: 30, right: 30, top: 5),
-              
               child: Text(
                 "Select Your Dish",
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-             
               ),
-              
             ),
-            
           )
         : Text(
             "Please fill this field",
