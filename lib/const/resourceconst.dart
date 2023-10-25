@@ -9,4 +9,5 @@ class Resource {
   static const prevs_month = 'lm';
   static const booking="/time_entries.json";
   static const lunchCancellingUrl="/time_entries/";
+  // static const teacoffee='/time_entries';
 }

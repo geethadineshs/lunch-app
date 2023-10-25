@@ -1,10 +1,10 @@
-import 'package:acsfoodapp/const/stringconst.dart';
-import 'package:acsfoodapp/pages/home/homecontroller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../const/Appcolor.dart';
+import '../../const/stringconst.dart';
+import 'homecontroller.dart';
 
 class HomeView extends GetView<Homecontroller> {
   HomeView({Key? key}) : super(key: key) {
@@ -27,9 +27,7 @@ class HomeView extends GetView<Homecontroller> {
         },
         child: _body(context),
       ),
-      floatingActionButton: Obx(() => controller.isbooked.value == true
-          ? _floattingcancell()
-          : _flotting()),
+      floatingActionButton:  _flotting(),
     );
   }
 

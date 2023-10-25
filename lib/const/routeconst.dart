@@ -1,17 +1,20 @@
-import 'package:acsfoodapp/const/stringconst.dart';
-import 'package:acsfoodapp/pages/Lunchbooking/lunchbinding.dart';
-import 'package:acsfoodapp/pages/Lunchbooking/lunchview.dart';
-import 'package:acsfoodapp/pages/home/homebinding.dart';
-import 'package:acsfoodapp/pages/home/homeview.dart';
-import 'package:acsfoodapp/pages/login/loginbinding.dart';
-import 'package:acsfoodapp/pages/login/loginview.dart';
-import 'package:acsfoodapp/pages/splash/splashbinding.dart';
-import 'package:acsfoodapp/pages/splash/splashscreen.dart';
 import 'package:get/get.dart';
+import 'package:test_app/TeaCoffee/teacoffeeview.dart';
+import '../TeaCoffee/teacoffeebinding.dart';
+import '../pages/Lunchbooking/lunchbinding.dart';
+import '../pages/Lunchbooking/lunchview.dart';
+import '../pages/home/homebinding.dart';
+import '../pages/home/homeview.dart';
+import '../pages/login/loginbinding.dart';
+import '../pages/login/loginview.dart';
+import '../pages/splash/splashbinding.dart';
+import '../pages/splash/splashscreen.dart';
+import 'stringconst.dart';
 
 class Routeconst {
   Routeconst._();
   static const initalpath = Appstring.intital;
+    
   static final route = [
     GetPage(
       name: initalpath,
@@ -32,6 +35,13 @@ class Routeconst {
       name: Appstring.foodorder,
       page: () => LunchView(),
       binding: LunchBinging(),
-    )
+    ),
+    GetPage(
+      name: Appstring.TeaCoffee,
+      page: () => TeaCoffeeView(),
+      binding:TeaCoffeeBinging() ,
+
+    ),
+    
   ];
 }
