@@ -2,7 +2,6 @@ import 'package:acsfoodapp/const/stringconst.dart';
 import 'package:acsfoodapp/pages/home/homecontroller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 import '../../const/Appcolor.dart';
 
@@ -13,9 +12,6 @@ class HomeView extends GetView<Homecontroller> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime currentDate = DateTime.now();
-    var currentdate = DateFormat("yyyy-MM-dd").format(
-        DateTime(currentDate.year, currentDate.month, currentDate.day));
     return Scaffold(
       appBar: _appbar(),
       body: RefreshIndicator(
@@ -43,8 +39,8 @@ class HomeView extends GetView<Homecontroller> {
       backgroundColor: Colors.tealAccent,
     );
   }
-  _floattingcancell()
-  {
+
+  _floattingcancell() {
     return FloatingActionButton.extended(
       onPressed: () {
         controller.cancel();
@@ -54,6 +50,7 @@ class HomeView extends GetView<Homecontroller> {
       backgroundColor: Colors.tealAccent,
     );
   }
+
   _appbar() {
     return AppBar(
       backgroundColor: AppColors.siteBlue,
@@ -79,34 +76,37 @@ class HomeView extends GetView<Homecontroller> {
 
   _body(context) {
     return _lunchcount(context);
-
   }
-_lunchcount(context)
-{
-  return SingleChildScrollView(
-      child: Column(
-        children: [
-          _prevsinfo(context),
-          _monthinfo(context),
-          _empty(),
-          _todayBooking()
-        ],
-      ));
-}
+
+  _lunchcount(context) {
+    return SingleChildScrollView(
+        child: Column(
+      children: [
+        _prevsinfo(context),
+        _monthinfo(context),
+        _empty(),
+        _todayBooking()
+      ],
+    ));
+  }
+
   _prevsinfo(context) {
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(20), 
+              bottomRight: Radius.circular(20),
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
-              bottomLeft: Radius.circular(20)
-          ),
+              bottomLeft: Radius.circular(20)),
           side: BorderSide(width: 1, color: AppColors.grey)),
       child: Column(
-        children: [_prevcardfirstchild(), _prevcardsecoundchild(),
-          Container(height: 20,)
+        children: [
+          _prevcardfirstchild(),
+          _prevcardsecoundchild(),
+          Container(
+            height: 20,
+          )
         ],
       ),
     );
@@ -163,14 +163,16 @@ _lunchcount(context)
 
   _cardfirstchild() {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child:Obx(() => Text(controller.month.value.toString(),style: TextStyle(
-            color: AppColors.siteBlue,
-            fontWeight: FontWeight.w600
-        ),),
-      ),)
-    );
+        child: Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Obx(
+        () => Text(
+          controller.month.value.toString(),
+          style:
+              TextStyle(color: AppColors.siteBlue, fontWeight: FontWeight.w600),
+        ),
+      ),
+    ));
   }
 
   _cardsecoundchild() {
@@ -181,21 +183,22 @@ _lunchcount(context)
         children: [
           Column(
             children: [
-              Text("Days",style: TextStyle(
-                  fontWeight: FontWeight.w600
-              ),),
+              Text(
+                "Days",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 5),
-                child: Obx(() => Text(controller.current_monthcount.toString())),
+                child: Obx(() => Text(controller.currentMonthCount.toString())),
               ),
             ],
           ),
           Column(
             children: [
-              Text("Amount",style: TextStyle(
-
-                  fontWeight: FontWeight.w600
-              ),),
+              Text(
+                "Amount",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: Obx(() => Text(controller.amount.toString())),
@@ -211,10 +214,11 @@ _lunchcount(context)
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: Obx(() => Text(controller.prev_month.value.toString(),style: TextStyle(
-          color: AppColors.siteBlue,
-          fontWeight: FontWeight.w600
-        ),)),
+        child: Obx(() => Text(
+              controller.previousMonth.value.toString(),
+              style: TextStyle(
+                  color: AppColors.siteBlue, fontWeight: FontWeight.w600),
+            )),
       ),
     );
   }
@@ -227,25 +231,26 @@ _lunchcount(context)
         children: [
           Column(
             children: [
-              Text("Days",style: TextStyle(
-
-                  fontWeight: FontWeight.w600
-              ),),
+              Text(
+                "Days",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 5),
-                child: Obx(() => Text(controller.prev_monthcont.toString())),
+                child: Obx(() => Text(controller.prevMonthCount.toString())),
               ),
             ],
           ),
           Column(
             children: [
-              Text("Amount",style: TextStyle(
-
-                  fontWeight: FontWeight.w600
-              ),),
+              Text(
+                "Amount",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 5),
-                child: Obx(() => Text(controller.prev_amount.toString())),
+                child:
+                    Obx(() => Text(controller.previousMonthAmount.toString())),
               ),
             ],
           ),
@@ -253,12 +258,14 @@ _lunchcount(context)
       ),
     );
   }
-  _empty() {
-    return Container( height: 50,);
 
+  _empty() {
+    return Container(
+      height: 50,
+    );
   }
-  _todayBooking()
-  {
+
+  _todayBooking() {
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(
@@ -279,17 +286,24 @@ _lunchcount(context)
       ),
     );
   }
+
   _todayDate() {
     return Center(
         child: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child:Text("Bookings on "+DateTime.now().day.toString()+"-"+DateTime.now().month.toString()+"-"+DateTime.now().year.toString(),style: TextStyle(
-              color: Colors.greenAccent,
-              fontWeight: FontWeight.w500
-          ),
-          ),)
-    );
+      padding: const EdgeInsets.only(top: 10),
+      child: Text(
+        "Bookings on " +
+            DateTime.now().day.toString() +
+            "-" +
+            DateTime.now().month.toString() +
+            "-" +
+            DateTime.now().year.toString(),
+        style:
+            TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.w500),
+      ),
+    ));
   }
+
   _selectedOption() {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
@@ -298,9 +312,10 @@ _lunchcount(context)
         children: [
           Column(
             children: [
-              Text("Main Course",style: TextStyle(
-                  fontWeight: FontWeight.w600
-              ),),
+              Text(
+                "Main Course",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: Text("Rice"),
@@ -309,13 +324,13 @@ _lunchcount(context)
           ),
           Column(
             children: [
-              Text("Extra",style: TextStyle(
-
-                  fontWeight: FontWeight.w600
-              ),),
+              Text(
+                "Extra",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 5),
-                child:Text(""),
+                child: Text(""),
               ),
             ],
           ),

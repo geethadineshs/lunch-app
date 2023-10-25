@@ -5,18 +5,10 @@ import 'package:get/get.dart';
 
 import '../../const/Appcolor.dart';
 
-class LunchView extends GetView<LunchController>{
+class LunchView extends GetView<LunchController> {
   LunchView({Key? key}) : super(key: key) {
     controller.init();
   }
-
-  // String dropdownvalue = 'Meals with One Chapati';
-
-  // // List of items in our dropdown menu
-  // var items = [
-  //   "Meals with One Chapati",
-  //   'Chapathi only',
-  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +26,7 @@ class LunchView extends GetView<LunchController>{
   _appbar() {
     return AppBar(
       title: Text("Book Lunch"),
-      backgroundColor:  AppColors.siteBlue,
+      backgroundColor: AppColors.siteBlue,
     );
   }
 
@@ -92,6 +84,7 @@ class LunchView extends GetView<LunchController>{
       ],
     );
   }
+
   _mainmanu1(context) {
     return SizedBox(
         height: 20,
@@ -104,19 +97,20 @@ class LunchView extends GetView<LunchController>{
           ),
         ));
   }
+
   _dropdown() {
     return Padding(
       padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
       child: Obx(() => DropdownButtonFormField(
-        focusColor: Colors.red,
+          focusColor: Colors.red,
           decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
-                gapPadding: 20,
+                  gapPadding: 20,
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                      color: Colors.indigoAccent, width: 1))),
+                  borderSide:
+                      BorderSide(color: Colors.indigoAccent, width: 1))),
           items: [
-            for (var data in controller.mainiteams.value)
+            for (var data in controller.mainItems.value)
               DropdownMenuItem(
                 child: Text(data),
                 value: data,
@@ -125,6 +119,7 @@ class LunchView extends GetView<LunchController>{
           onChanged: (value) => controller.selected.value = value as String)),
     );
   }
+
   _dropdown1() {
     return Padding(
       padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
@@ -132,10 +127,10 @@ class LunchView extends GetView<LunchController>{
           decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                      color: Colors.indigoAccent, width: 1))),
+                  borderSide:
+                      BorderSide(color: Colors.indigoAccent, width: 1))),
           items: [
-            for (var data in controller.extraiteam.value)
+            for (var data in controller.extraItems.value)
               DropdownMenuItem(
                 child: Text(data),
                 value: data,
@@ -152,9 +147,7 @@ class LunchView extends GetView<LunchController>{
         if (responc == 200) {
           controller.booked();
           Get.offAndToNamed(Appstring.home);
-        } else {
-          
-        }
+        } else {}
       },
       label: Text("Book Lunch"),
       icon: Icon(Icons.breakfast_dining),
@@ -199,21 +192,4 @@ class LunchView extends GetView<LunchController>{
       ),
     );
   }
-  //   items: list.map<DropdownMenuItem<String>>((String value) {
-  //     return DropdownMenuItem<String>(
-  //       value: value,
-  //       child: Text(value),
-  //     );
-  //   }).toList(),
-  // );
-  _Homefloattingbutton() {
-    return FloatingActionButton.extended(
-      onPressed: () {
-        Get.toNamed(Appstring.home);
-      },
-      label: Text("Back Home"),
-      icon: Icon(Icons.home),
-    );
-  }
-
 }

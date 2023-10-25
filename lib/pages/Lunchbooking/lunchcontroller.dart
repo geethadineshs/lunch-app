@@ -17,14 +17,14 @@ class LunchController extends GetxController {
 
   var noselected = 'chapathi'.obs;
   var selected = "".obs;
-  var extra= ''.obs;
-  RxList mainiteams = [].obs;
-  RxList extraiteam = [].obs;
+  var extra = ''.obs;
+  RxList mainItems = [].obs;
+  RxList extraItems = [].obs;
   booklunch() async {
-    var foodoption = mainiteams.indexOf(selected.value) + 1;
-    var extra= extraiteam.indexOf(selected.value)+1;
-    var key = await getusercredential();
-    var getbody = await postbody(foodoption,extra);
+    var foodoption = mainItems.indexOf(selected.value) + 1;
+    var extra = extraItems.indexOf(selected.value) + 1;
+    var key = await getUserCredential();
+    var getbody = await postbody(foodoption, extra);
     var body = jsonEncode(getbody);
     //print(body.runtimeType);
     try {
@@ -44,8 +44,6 @@ class LunchController extends GetxController {
         DateTime currentDate = DateTime.now();
         var currentdate = DateFormat("yyyy-MM-dd").format(
             DateTime(currentDate.year, currentDate.month, currentDate.day));
-        var data = jsonDecode(response.body);
-        var newdata = data["id"];
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString(currentdate.toString(), currentdate.toString());
         return response.statusCode;
@@ -74,21 +72,21 @@ class LunchController extends GetxController {
     print(extrafooditem);
     for (var item in mainfooditem) {
       var labeitem = item["label"];
-      mainiteams.add(labeitem);
+      mainItems.add(labeitem);
     }
     for (var extra in extrafooditem) {
       var labeitem = extra["label"];
-      extraiteam.add(labeitem);
+      extraItems.add(labeitem);
     }
   }
 
-  getusercredential() async {
+  getUserCredential() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var key = prefs.getString('key');
     return key;
   }
 
-  postbody(foodcode,extra) {
+  postbody(foodcode, extra) {
     return {
       "time_entry": {
         "project_id": 342,
@@ -106,7 +104,7 @@ class LunchController extends GetxController {
   }
 
   cancel() async {
-    var key = await getusercredential();
+    var key = await getUserCredential();
     DateTime currentDate = DateTime.now();
     var currentdate = DateFormat("yyyy-MM-dd")
         .format(DateTime(currentDate.year, currentDate.month, currentDate.day));
@@ -150,35 +148,34 @@ class LunchController extends GetxController {
       return -1;
     }
   }
-   precheck() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userid= await getuserid();
-      var prevMonth = 't';
-      // https://pm.agilecyber.co.uk/projects/lunch/time_entries?utf8=✓&set_filter=1&sort=spent_on:desc&f[]=spent_on&op[spent_on]=lm&f[]=user_id&op[user_id]==&v[user_id][]=153
-      // op[spent_on]=m - current month
-      // op[spent_on]=lm - last month
-      // op[spent_on]=t -today
 
-      var endpoint=Uri.encodeFull( Resource.baseurl + '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$prevMonth&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
-      var key = await getusercredential();
-      try {
-        final responce = await http.get(
-            Uri.parse(endpoint),
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": "Basic $key",
-            });
-        if (responce.statusCode == 200) {
-          return json.decode(responce.body) ;
-        } else {
-          return 0;
-        }
-      } catch (e) {
-        return -1;
+  precheck() async {
+    String? userid = await getuserid();
+    var prevMonth = 't';
+    // https://pm.agilecyber.co.uk/projects/lunch/time_entries?utf8=✓&set_filter=1&sort=spent_on:desc&f[]=spent_on&op[spent_on]=lm&f[]=user_id&op[user_id]==&v[user_id][]=153
+    // op[spent_on]=m - current month
+    // op[spent_on]=lm - last month
+    // op[spent_on]=t -today
+
+    var endpoint = Uri.encodeFull(Resource.baseurl +
+        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$prevMonth&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
+    var key = await getUserCredential();
+    try {
+      final responce = await http.get(Uri.parse(endpoint), headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Basic $key",
+      });
+      if (responce.statusCode == 200) {
+        return json.decode(responce.body);
+      } else {
+        return 0;
       }
+    } catch (e) {
+      return -1;
     }
-  getuserid() async
-  {
+  }
+
+  getuserid() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var user = prefs.getString(Appstring.loginid);
     return user;
