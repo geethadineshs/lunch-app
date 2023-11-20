@@ -10,6 +10,7 @@ import '../../const/resourceconst.dart';
 import '../../const/stringconst.dart';
 
 class Homecontroller extends GetxController {
+  var selected = ''.obs;
   var current_monthcount = 0.obs;
   var prev_monthcont = 0.obs;
   var amount = 0.obs;
@@ -18,13 +19,22 @@ class Homecontroller extends GetxController {
   var month = "".obs;
   var prev_month = "".obs;
   var isbooked = false.obs;
-
+  var todaylunch = "".obs;
+  var lunchOptionId = 0.obs;
+  var lastname ="".obs;
+  // String get lunchMessage => '';
 
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('userid');
     await prefs.remove("key");
   }
+//     void setSelectedDishBasedOnLogic() async {
+//     // Replace this with your actual logic to determine the selected dish
+//     String selectedDish = await fetchSelectedDish(); // Implement this function to get the selected dish asynchronously
+//     selected.value = selectedDish;
+//   }
+// }
 
   oninit() async {
     var months = DateFormat.MMMM().format(DateTime.now());
@@ -33,6 +43,7 @@ class Homecontroller extends GetxController {
     var prev = DateTime(currentDate.year, currentDate.month - 1, 1);
     var premonth = DateFormat.MMMM().format(prev);
     prev_month.value = premonth;
+
     var response = await current_month_lunch_count();
     if (response == 0 || response == -1) {
       print("api call error");
@@ -40,6 +51,7 @@ class Homecontroller extends GetxController {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var username = prefs.getString('userid');
       name.value = username as String;
+      lastname.value=prefs.getString(Appstring.lastname)! as String;
       // List spend=responc[]
       Set spendtime = {};
       var timeentry = response["time_entries"];
@@ -57,7 +69,7 @@ class Homecontroller extends GetxController {
     }
     var prevresponc = await prevs_month_lunch_count();
     if (prevresponc == 0 || prevresponc == -1) {
-      print("Api error");
+      // print("Api error");
     } else {
       Set spendtime = {};
       var timeentry = prevresponc["time_entries"];
@@ -68,6 +80,10 @@ class Homecontroller extends GetxController {
       prev_amount.value = spendtime.length * 10;
     }
     var isBooked = await precheck();
+    // var todaylunch = await getTodaLunch();
+
+    // print(todaylunch.toString() + "hjsdjh");
+
     if (isBooked == 0 || isBooked == -1) {
     } else {
       try {
@@ -82,6 +98,47 @@ class Homecontroller extends GetxController {
         this.isbooked.value = false;
       }
     }
+
+    var todaylunch = await getTodaLunch();
+print(todaylunch['time_entries'].toString());
+
+
+
+print(todaylunch.toString() + "hjsdjh");
+
+if (todaylunch == 0 || todaylunch == -1) {
+  // Handle errors or no data here
+} else {
+  try {
+    List<dynamic> customFields = todaylunch['time_entries'][0]['custom_fields'];
+
+    for (var field in customFields) {
+      if (field['name'] == "Lunch Option") { // Check for the desired field name
+        lunchOptionId.value =int.parse(field['value']); // Access the "value" property and parse it to an integer
+        // todaylunch.value = lunchOptionId.toString(); // Update the observable
+        print("Lunch Option ID: $lunchOptionId");
+        break; // If found, exit the loop
+      }
+    }
+  } catch (e) {
+    this.todaylunch.value = 'false';
+  }
+}
+// String lunchMessage;
+
+// if (lunchOptionId == 1) {
+//   lunchMessage = "Meals with chapati";
+// } else if (lunchOptionId == 2) {
+//   lunchMessage = "Chapati only";
+// } else {
+//   lunchMessage = "Unknown Lunch Option";
+// }
+
+// print("Lunch Option ID: $lunchOptionId");
+// print("Lunch Message: $lunchMessage");
+// print(lunchOptionId);
+// todaylunch.value = lunchMessage;
+
   }
 
   getusercredential() async {
@@ -148,8 +205,8 @@ class Homecontroller extends GetxController {
     }
   }
 
-  booklunch() {
-    var is_lunche_booked = precheck();
+  booklunch() async {
+    // print("today"+is_lunche_booked);
     DateTime currentDate = DateTime.now();
     var time = DateFormat.Hm().format(currentDate);
     int hour = int.parse(time.split(":")[0]);
@@ -200,6 +257,7 @@ class Homecontroller extends GetxController {
         "Authorization": "Basic $key",
       });
       if (response.statusCode == 200) {
+        print("response.body ${response.body}");
         return json.decode(response.body);
       } else {
         return 0;
@@ -227,6 +285,37 @@ class Homecontroller extends GetxController {
           });
       if (response.statusCode == 204) {
         prefs.remove(currentdate.toString());
+      }
+    } catch (e) {
+      return -1;
+    }
+  }
+
+  getTodaLunch() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userid = await getuserid();
+    var filter = 't';
+    // https://pm.agilecyber.co.uk/projects/lunch/time_entries?utf8=✓&set_filter=1&sort=spent_on:desc&f[]=spent_on&op[spent_on]=lm&f[]=user_id&op[user_id]==&v[user_id][]=153
+    // op[spent_on]=m - current month
+    // op[spent_on]=lm - last month group_by=cf_41
+
+    var url = Uri.encodeFull(Resource.baseurl +
+        Resource.lunchcountapi +
+        'sort=spent_on:desc&f[]=spent_on&op[spent_on]=${filter}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}&f[]=&c[]=spent_on&c[]=user&c[]=activity&c[]=issue&c[]=comments&c[]=hours&c[]=cf_59&c[]=cf_63&c[]=project&group_by=cf_41&t[]=hours&t[]=&spent_type=T');
+    print("url ${url}");
+    var key = await getusercredential();
+    try {
+      d.log(url);
+
+      final response = await http.get(Uri.parse(url), headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Basic $key",
+      });
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonResponse = json.decode(response.body);
+        return jsonResponse;
+      } else {
+        return 0;
       }
     } catch (e) {
       return -1;

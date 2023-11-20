@@ -22,53 +22,59 @@ class LunchController extends GetxController {
   var noselected = 'chapathi'.obs;
   var selected = "".obs;
   var extra = ''.obs;
-  var  getbody;
+  var getbody;
   RxList mainiteams = [].obs;
   RxList extraiteam = [].obs;
+  List selectedItems=[];
   Rx<TextEditingController> startdate = TextEditingController().obs;
   Rx<TextEditingController> enddate = TextEditingController().obs;
-
+// Define a variable to hold the selected values
+  List<String> selectedValues = [];
   booklunch(selectedDateStrings) async {
     var foodoption = mainiteams.indexOf(selected.value) + 1;
-    var extra = extraiteam.indexOf(selected.value) + 1;
-    var key = await getusercredential();
-   for( var i in selectedDateStrings){
-    var body = jsonEncode(postbody(foodoption, extra,i));
-    // print(body.runtimeType);
-    print(body);
-    //  print("Booking date: $i");
-    // print("Date: $i");
-    try {
-      final response = await http.post(
-        Uri.parse(
-          Resource.baseurl + Resource.booking,
-        ),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Basic $key",
-        },
-        body: body,
-      );
-      //print(await response);
-
-      if (response.statusCode == 200) {
-        // DateTime currentDate = DateTime.now();
-        // var currentdate = DateFormat("yyyy-MM-dd").format(
-        //     DateTime(currentDate.year, currentDate.month, currentDate.day));
-        // SharedPreferences prefs = await SharedPreferences.getInstance();
-        // await prefs.setString(currentdate.toString(), currentdate.toString());
-         //return response.statusCode;
-      } else {
-        //return response.statusCode;
-        // print("Failed to book date: $i (Status Code: ${response.statusCode})");
-      }
-    } catch (e) {
-        // print("Error while booking date: $i ($e)");
-      return -1;
-    }
+    var extra = selectedItems;    
+      print('Selected Values outside widget: $selectedValues');
     
+
+    var key = await getusercredential();
+    for (var i in selectedDateStrings) {
+      var body = jsonEncode(postbody(foodoption, extra, i));
+
+      // print(body.runtimeType);
+      print(body);
+      //  print("Booking date: $i");
+      // print("Date: $i");
+      try {
+        final response = await http.post(
+          Uri.parse(
+            Resource.baseurl + Resource.booking,
+          ),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Basic $key",
+          },
+          body: body,
+        );
+        //print(await response);
+
+        if (response.statusCode == 200) {
+          // DateTime currentDate = DateTime.now();
+          // var currentdate = DateFormat("yyyy-MM-dd").format(
+          //     DateTime(currentDate.year, currentDate.month, currentDate.day));
+          // SharedPreferences prefs = await SharedPreferences.getInstance();
+          // await prefs.setString(currentdate.toString(), currentdate.toString());
+          //return response.statusCode;
+        } else {
+          //return response.statusCode;
+          // print("Failed to book date: $i (Status Code: ${response.statusCode})");
+        }
+      } catch (e) {
+        // print("Error while booking date: $i ($e)");
+        return -1;
+      }
+    }
   }
-  }
+
   init() async {
     var responce = await _menuapi();
     var costumfile = responce["custom_fields"];
@@ -83,7 +89,7 @@ class LunchController extends GetxController {
     var mainfooditem = mainoptions["possible_values"];
     var extrafooditem = extraoption["possible_values"];
     print(mainfooditem.length);
-    print(extrafooditem);
+    print(extrafooditem.length);
     for (var item in mainfooditem) {
       var labeitem = item["label"];
       mainiteams.add(labeitem);
@@ -100,18 +106,22 @@ class LunchController extends GetxController {
     return key;
   }
 
-  postbody(foodcode, extra, startDate) {
+  postbody(
+    foodcode,
+    extra,
+    startDate,
+  ) {
     return {
       "time_entry": {
         "project_id": 342,
         "hours": 0,
         "activity_id": 16,
-        "spent_on":startDate,
+        "spent_on": startDate,
         "custom_fields": [
           {"id": 39, "value": 1},
           {"id": 41, "value": foodcode},
           {"id": 59, "value": "Non Billable"},
-          // {"id":'',"value":'extra'}
+          {"id": 47, "value": extra},
         ],
         "comments": ""
       }
@@ -144,6 +154,7 @@ class LunchController extends GetxController {
   }
 
   _menuapi() async {
+    print(_menuapi);
     try {
       final responce = await http.get(
           Uri.parse(

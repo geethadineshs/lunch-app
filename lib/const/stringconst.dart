@@ -13,5 +13,6 @@ class Appstring {
   static const erormessageforusername="";
   static const loginid='loginid';
   static const TeaCoffee="/teacoffee";
+  static const lastname="lastname";
   
 }

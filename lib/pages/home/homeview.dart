@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:test_app/main.dart';
+import 'package:test_app/services/notifi_service.dart';
 
 import '../../const/Appcolor.dart';
 import '../../const/stringconst.dart';
@@ -9,22 +11,31 @@ class HomeView extends GetView<Homecontroller> {
   HomeView({Key? key}) : super(key: key) {
     controller.oninit();
   }
+  final notificationService = NotificationService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appbar(),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          // You can put your refresh logic here
-          await Future.delayed(Duration(seconds: 1));
-          controller.oninit();
-          // Refresh completed
-        },
-        child: _body(context),
-      ),
-      floatingActionButton:  _flotting(),
-    );
+        appBar: _appbar(),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            // You can put your refresh logic here
+            await Future.delayed(Duration(seconds: 1));
+
+            controller.oninit();
+            // Refresh completed
+          },
+          child: _body(context),
+        ),
+        floatingActionButton: Stack(
+          children: [
+            // Align(child:  _floatting(), alignment: Alignment.bottomLeft,),
+            Align(
+              child: _flotting(),
+              alignment: Alignment.bottomRight,
+            )
+          ],
+        ));
   }
 
   _flotting() {
@@ -37,6 +48,17 @@ class HomeView extends GetView<Homecontroller> {
       backgroundColor: Colors.tealAccent,
     );
   }
+  // _floatting() {
+  //   return FloatingActionButton.extended(
+  //     onPressed: () {
+  //       notificationService.showDailyNotification(id: 1,body: 'Hello',title:'test',notificationTime:DateTime(2023, 10, 1));
+  //     },
+  //     label: Text("Push Notifications"),
+  //     icon: Icon(Icons.food_bank_outlined),
+  //     backgroundColor: Colors.tealAccent,
+
+  //   );
+  // }
 
   _floattingcancell() {
     return FloatingActionButton.extended(
@@ -50,10 +72,11 @@ class HomeView extends GetView<Homecontroller> {
   }
 
   _appbar() {
+    print(controller.name);
     return AppBar(
       backgroundColor: AppColors.siteBlue,
       title: Obx(() => Text(
-            "Hi ${((controller.name).toLowerCase()).capitalizeFirst}",
+            "Hi ${((controller.name).toUpperCase()).capitalizeFirst}"+" "+"${controller.lastname}",
             style: TextStyle(
                 fontSize: 20, // Adjust the font size as needed
                 color: Colors.white, // Change the text color to your preference
@@ -81,8 +104,8 @@ class HomeView extends GetView<Homecontroller> {
         child: Column(
       children: [
         _prevsinfo(context),
-        // _monthinfo(context),
-        // _empty(),
+        _monthinfo(context),
+        _empty(),
         _todayBooking()
       ],
     ));
@@ -187,7 +210,8 @@ class HomeView extends GetView<Homecontroller> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 5),
-                child: Obx(() => Text(controller.current_monthcount.value.toString())),
+                child: Obx(
+                    () => Text(controller.current_monthcount.value.toString())),
               ),
             ],
           ),
@@ -213,7 +237,7 @@ class HomeView extends GetView<Homecontroller> {
       child: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Obx(() => Text(
-              controller.prev_monthcont.value.toString(),
+              controller.prev_month.value.toString(),
               style: TextStyle(
                   color: AppColors.siteBlue, fontWeight: FontWeight.w600),
             )),
@@ -235,7 +259,8 @@ class HomeView extends GetView<Homecontroller> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 5),
-                child: Obx(() => Text(controller.prev_monthcont.value.toString())),
+                child:
+                    Obx(() => Text(controller.prev_monthcont.value.toString())),
               ),
             ],
           ),
@@ -247,8 +272,7 @@ class HomeView extends GetView<Homecontroller> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 5),
-                child:
-                    Obx(() => Text(controller.prev_amount.value.toString())),
+                child: Obx(() => Text(controller.prev_amount.value.toString())),
               ),
             ],
           ),
@@ -314,26 +338,16 @@ class HomeView extends GetView<Homecontroller> {
                 "Main Course",
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Text("Rice"),
-              ),
+              Obx(() => Text(
+               controller.lunchOptionId==0 ?"No Lunch Option":controller.lunchOptionId == 1?"Meals with chapati":"Chapati only",
+                    style: TextStyle(fontSize: 16),
+                  )),
             ],
           ),
-          Column(
-            children: [
-              Text(
-                "Extra",
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Text(""),
-              ),
-            ],
-          ),
+          
         ],
       ),
     );
   }
+  
 }

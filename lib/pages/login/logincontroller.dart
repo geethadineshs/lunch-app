@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
@@ -50,6 +51,8 @@ class LoginController extends GetxController {
       }
     } else {
       var name = responce["user"]["firstname"];
+      var lastname = responce["user"]["lastname"];
+      
       var id=responce['user']['id'].toString();
 
       loader.toggle();
@@ -57,6 +60,7 @@ class LoginController extends GetxController {
         prefs.setString(Appstring.userkey, key);
         prefs.setString(Appstring.userid, name);
         prefs.setString(Appstring.loginid, id);
+        prefs.setString(Appstring.lastname, lastname);
       Get.offNamed(Appstring.home);
     }
     //(Appstring.home);

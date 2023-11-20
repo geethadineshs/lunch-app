@@ -1,13 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:multiselect/multiselect.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+// import 'package:test_app/services/notifi_service.dart';
 import '../../const/Appcolor.dart';
 import '../../const/stringconst.dart';
 import 'lunchcontroller.dart';
 import 'package:intl/intl.dart';
 
 class LunchView extends GetView<LunchController> {
+  // final NotificationService notificationService = NotificationService();
   LunchView({Key? key}) : super(key: key) {
     controller.init();
   }
@@ -37,7 +41,7 @@ class LunchView extends GetView<LunchController> {
   _appbar() {
     return AppBar(
       title: Text("Book Lunch"),
-      backgroundColor: AppColors.siteBlue,
+      backgroundColor: const Color.fromRGBO(0, 76, 152, 1),
     );
   }
 
@@ -51,33 +55,36 @@ class LunchView extends GetView<LunchController> {
           _dropdown1(),
           Padding(padding: const EdgeInsets.all(20.0)),
 
-        SfDateRangePicker(
-  selectionMode: DateRangePickerSelectionMode.range,
-  selectableDayPredicate: (DateTime date) {
-    // Allow selection of all dates except Saturdays and Sundays
-    return date.weekday != DateTime.saturday && date.weekday != DateTime.sunday;
-  },
-  minDate: DateTime.now(),
-  onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-    selectedDates.clear(); // Clear the list before adding new dates
-    DateTime now = DateTime.now();
-    for (int i = args.value.startDate.day;
-        i <= args.value.endDate.day;
-        i++) {
-      DateTime selectedDate = DateTime(
-          args.value.startDate.year, args.value.startDate.month, i);
-      // Check if it's not Saturday or Sunday before adding
-      if (selectedDate.weekday != DateTime.saturday && selectedDate.weekday != DateTime.sunday) {
-        selectedDates.add(selectedDate);
-      }
-    }
-    selectedDateStrings = selectedDates
-        .map((date) => date.toString().split(' ')[0])
-        .toList();
-    print(selectedDateStrings);
-  },
-)
-
+          SfDateRangePicker(
+            selectionMode: DateRangePickerSelectionMode.range,
+            selectableDayPredicate: (DateTime date) {
+              // Allow selection of all dates except Saturdays and Sundays
+              DateTime maxSelectableDate = DateTime.now()
+                  .add(Duration(days: 14)); // Allow 15 days from today
+              return date.weekday != DateTime.saturday &&
+                  date.weekday != DateTime.sunday;
+            },
+            minDate: DateTime.now(),
+            onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+              selectedDates.clear(); // Clear the list before adding new dates
+              DateTime now = DateTime.now();
+              for (int i = args.value.startDate.day;
+                  i <= args.value.endDate.day;
+                  i++) {
+                DateTime selectedDate = DateTime(
+                    args.value.startDate.year, args.value.startDate.month, i);
+                // Check if it's not Saturday or Sunday before adding
+                if (selectedDate.weekday != DateTime.saturday &&
+                    selectedDate.weekday != DateTime.sunday) {
+                  selectedDates.add(selectedDate);
+                }
+              }
+              selectedDateStrings = selectedDates
+                  .map((date) => date.toString().split(' ')[0])
+                  .toList();
+              print(selectedDateStrings);
+            },
+          )
 
           // if (pickedStartDate != null) {
           //   DateTime pickedEndDate = pickedStartDate.add(Duration(days: 14));
@@ -191,7 +198,7 @@ class LunchView extends GetView<LunchController> {
         child: Padding(
           padding: const EdgeInsets.only(left: 30, right: 30, top: 5),
           child: Text(
-            "Extra Dish",
+            "Tea or coffee preferences",
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
         ));
@@ -200,42 +207,72 @@ class LunchView extends GetView<LunchController> {
   _dropdown() {
     return Padding(
       padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
-      child: Obx(() => DropdownButtonFormField(
-          // focusColor: Colors.red,
-          decoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                  gapPadding: 20,
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide:
-                      BorderSide(color: Colors.indigoAccent, width: 1))),
-          items: [
-            for (var data in controller.mainiteams.value)
-              DropdownMenuItem(
-                child: Text(data),
-                value: data,
-              ),
-          ],
-          onChanged: (value) => controller.selected.value = value as String)),
+      child: Obx(() => Container(
+            decoration: BoxDecoration(
+              border:
+                  Border.all(color: Colors.blue), // Set border color to blue
+              borderRadius:
+                  BorderRadius.circular(8.0), // Adjust border radius as needed
+            ),
+            child: DropdownButtonFormField(
+                // focusColor: Colors.red,
+                // decoration: InputDecoration(
+                //     enabledBorder: OutlineInputBorder(
+                //         gapPadding: 20,
+                //         borderRadius: BorderRadius.circular(12),
+                //         borderSide:
+                //             BorderSide(color: Colors.indigoAccent, width: 1))),
+                items: [
+                  for (var data in controller.mainiteams.value)
+                    DropdownMenuItem(
+                      child: Text(data),
+                      value: data,
+                    ),
+                ],
+                onChanged: (value) =>
+                    controller.selected.value = value as String),
+          )),
     );
   }
 
   _dropdown1() {
     return Padding(
       padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
-      child: Obx(() => DropdownButtonFormField(
-          decoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide:
-                      BorderSide(color: Colors.indigoAccent, width: 1))),
-          items: [
-            for (var data in controller.extraiteam.value)
-              DropdownMenuItem(
-                child: Text(data),
-                value: data,
-              ),
-          ],
-          onChanged: (value) => controller.extra.value = value as String)),
+      child: Obx(
+        () => Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.blue), // Set border color to blue
+            borderRadius:
+                BorderRadius.circular(8.0), // Adjust border radius as needed
+          ),
+          child: MultiSelectDialogField(
+            items: controller.extraiteam.value
+                .map((data) => MultiSelectItem<String>(data, data))
+                .toList(),
+            listType: MultiSelectListType.CHIP,
+            onSelectionChanged: (value) {
+              controller.selectedItems = value;
+            },
+            onConfirm: (values) {
+              if (values != null && values.isNotEmpty) {
+                List<String> selectedValues = List<String>.from(values);
+
+                controller.extra.value =
+                    (selectedValues.isNotEmpty ? selectedValues[0] : null)!;
+
+                print('Selected Values: $selectedValues');
+              }
+            },
+            selectedItemsTextStyle: TextStyle(),
+            decoration: BoxDecoration(
+              border: Border.all(
+                  color: Colors
+                      .transparent), // Set default border color to transparent
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -248,15 +285,30 @@ class LunchView extends GetView<LunchController> {
           // Show a snack bar when any of the fields are empty
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Please select your dish and calendar dates.'),
+              content: Text(
+                'Please select your dish and calendar dates.',
+                style: TextStyle(color: Colors.white, fontSize: 16.0),
+              ),
+              backgroundColor: Colors.blue, // Set the background color
             ),
           );
         } else {
           var response = await controller.booklunch(selectedDateStrings);
           if (response == 200) {
             controller.booked();
+
             Get.offAndToNamed(Appstring.home);
           }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Lunch booked successfully!',
+                style: TextStyle(color: Colors.white, fontSize: 16.0),
+              ),
+              backgroundColor: Colors.blue,
+            ),
+          );
+          print(response);
         }
       },
       label: Text("Book Lunch"),
