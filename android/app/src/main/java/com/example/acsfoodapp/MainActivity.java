@@ -1,4 +1,4 @@
-package com.example.acsfoodapp;
+package com.acs.lunchapp;
 
 import io.flutter.embedding.android.FlutterActivity;
 
