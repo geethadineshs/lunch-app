@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:table_calendar/table_calendar.dart';
 import '../../const/resourceconst.dart';
 import '../../const/stringconst.dart';
 
@@ -184,7 +183,7 @@ class LunchController extends GetxController {
     // op[spent_on]=t -today
 
     var endpoint = Uri.encodeFull(Resource.baseurl +
-        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${prevMonth}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
+        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$prevMonth&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
     var key = await getusercredential();
     try {
       final responce = await http.get(Uri.parse(endpoint), headers: {

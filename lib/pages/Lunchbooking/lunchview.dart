@@ -1,14 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:multiselect/multiselect.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 // import 'package:test_app/services/notifi_service.dart';
-import '../../const/Appcolor.dart';
 import '../../const/stringconst.dart';
 import 'lunchcontroller.dart';
-import 'package:intl/intl.dart';
 
 class LunchView extends GetView<LunchController> {
   // final NotificationService notificationService = NotificationService();
@@ -254,7 +250,7 @@ class LunchView extends GetView<LunchController> {
               controller.selectedItems = value;
             },
             onConfirm: (values) {
-              if (values != null && values.isNotEmpty) {
+              if (values.isNotEmpty) {
                 List<String> selectedValues = List<String>.from(values);
 
                 controller.extra.value =

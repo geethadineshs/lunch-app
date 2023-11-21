@@ -51,7 +51,7 @@ class Homecontroller extends GetxController {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var username = prefs.getString('userid');
       name.value = username as String;
-      lastname.value=prefs.getString(Appstring.lastname)! as String;
+      lastname.value=prefs.getString(Appstring.lastname)!;
       // List spend=responc[]
       Set spendtime = {};
       var timeentry = response["time_entries"];
@@ -159,7 +159,7 @@ if (todaylunch == 0 || todaylunch == -1) {
     d.log(userid);
     var Month = 'm';
     var endpoint = Uri.encodeFull(Resource.baseurl +
-        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${Month}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
+        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$Month&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
 
     try {
       final responce = await http.get(Uri.parse(endpoint), headers: {
@@ -186,7 +186,7 @@ if (todaylunch == 0 || todaylunch == -1) {
     // op[spent_on]=lm - last month
 
     var url = Uri.encodeFull(Resource.baseurl +
-        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${filter}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
+        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$filter&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
     var key = await getusercredential();
     try {
       d.log(url);
@@ -249,7 +249,7 @@ if (todaylunch == 0 || todaylunch == -1) {
     // op[spent_on]=t -today
 
     var url = Uri.encodeFull(Resource.baseurl +
-        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${filter}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
+        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$filter&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
     var key = await getusercredential();
     try {
       final response = await http.get(Uri.parse(url), headers: {
@@ -301,8 +301,8 @@ if (todaylunch == 0 || todaylunch == -1) {
 
     var url = Uri.encodeFull(Resource.baseurl +
         Resource.lunchcountapi +
-        'sort=spent_on:desc&f[]=spent_on&op[spent_on]=${filter}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}&f[]=&c[]=spent_on&c[]=user&c[]=activity&c[]=issue&c[]=comments&c[]=hours&c[]=cf_59&c[]=cf_63&c[]=project&group_by=cf_41&t[]=hours&t[]=&spent_type=T');
-    print("url ${url}");
+        'sort=spent_on:desc&f[]=spent_on&op[spent_on]=$filter&f[]=user_id&op[user_id]==&v[user_id][]=$userid&f[]=&c[]=spent_on&c[]=user&c[]=activity&c[]=issue&c[]=comments&c[]=hours&c[]=cf_59&c[]=cf_63&c[]=project&group_by=cf_41&t[]=hours&t[]=&spent_type=T');
+    print("url $url");
     var key = await getusercredential();
     try {
       d.log(url);

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:test_app/main.dart';
 import 'package:test_app/services/notifi_service.dart';
 
 import '../../const/Appcolor.dart';
@@ -76,7 +75,7 @@ class HomeView extends GetView<Homecontroller> {
     return AppBar(
       backgroundColor: AppColors.siteBlue,
       title: Obx(() => Text(
-            "Hi ${((controller.name).toUpperCase()).capitalizeFirst}"+" "+"${controller.lastname}",
+            "Hi ${controller.name} ${controller.lastname}",
             style: TextStyle(
                 fontSize: 20, // Adjust the font size as needed
                 color: Colors.white, // Change the text color to your preference
@@ -84,8 +83,8 @@ class HomeView extends GetView<Homecontroller> {
                 fontFamily: 'Roboto'),
           )),
       actions: [
-        // IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
         IconButton(
+            tooltip: 'Logout',
             onPressed: () {
               controller.logout();
               Get.offNamed(Appstring.login);
@@ -96,10 +95,10 @@ class HomeView extends GetView<Homecontroller> {
   }
 
   _body(context) {
-    return _lunchcount(context);
+    return _lunchCount(context);
   }
 
-  _lunchcount(context) {
+  _lunchCount(context) {
     return SingleChildScrollView(
         child: Column(
       children: [
@@ -124,26 +123,13 @@ class HomeView extends GetView<Homecontroller> {
       child: Column(
         children: [
           _prevcardfirstchild(),
-          _prevcardsecoundchild(),
+          _prevCardSecondChild(),
           Container(
             height: 20,
           )
         ],
       ),
     );
-    //   Padding(
-    //   padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
-    //   child: Container(
-    //       width: MediaQuery.of(context).size.height * 0.9,
-    //       height: MediaQuery.of(context).size.width * 0.30,
-    //       color: Colors.black26,
-    //       child: Column(
-    //         children: [
-    //           _prevcardfirstchild(),
-    //           _prevcardsecoundchild(),
-    //         ],
-    //       )),
-    // );
   }
 
   _monthinfo(context) {
@@ -166,20 +152,6 @@ class HomeView extends GetView<Homecontroller> {
         ],
       ),
     );
-    // return Padding(
-    //   padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
-    //   child: Container(
-    //     width: MediaQuery.of(context).size.height * 0.9,
-    //     height: MediaQuery.of(context).size.width * 0.30,
-    //     color: Colors.black26,
-    //     child: Obx(() => Column(
-    //           children: [
-    //             _cardfirstchild(),
-    //             _cardsecoundchild(),
-    //           ],
-    //         )),
-    //   ),
-    // );
   }
 
   _cardfirstchild() {
@@ -245,7 +217,7 @@ class HomeView extends GetView<Homecontroller> {
     );
   }
 
-  _prevcardsecoundchild() {
+  _prevCardSecondChild() {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
       child: Row(
@@ -320,8 +292,7 @@ class HomeView extends GetView<Homecontroller> {
             DateTime.now().month.toString() +
             "-" +
             DateTime.now().year.toString(),
-        style:
-            TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.w500),
+        style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w500),
       ),
     ));
   }
@@ -339,15 +310,17 @@ class HomeView extends GetView<Homecontroller> {
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
               Obx(() => Text(
-               controller.lunchOptionId==0 ?"No Lunch Option":controller.lunchOptionId == 1?"Meals with chapati":"Chapati only",
+                    controller.lunchOptionId == 0
+                        ? "No Lunch Option"
+                        : controller.lunchOptionId == 1
+                            ? "Meals with chapati"
+                            : "Chapati only",
                     style: TextStyle(fontSize: 16),
                   )),
             ],
           ),
-          
         ],
       ),
     );
   }
-  
 }
