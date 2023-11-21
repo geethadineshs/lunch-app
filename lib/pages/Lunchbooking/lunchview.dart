@@ -80,6 +80,8 @@ class LunchView extends GetView<LunchController> {
                   .toList();
               print(selectedDateStrings);
             },
+            selectionColor: Colors.siteBlue,
+            rangeSelectionColor: AppColors.siteBlue.withOpacity(0.3),
           )
 
           // if (pickedStartDate != null) {
@@ -205,8 +207,8 @@ class LunchView extends GetView<LunchController> {
       padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
       child: Obx(() => Container(
             decoration: BoxDecoration(
-              border:
-                  Border.all(color: Color.fromARGB(255, 10, 91, 158)), // Set border color to blue
+              border: Border.all(
+                  color: AppColors.siteBlue), // Set border color to blue
               borderRadius:
                   BorderRadius.circular(8.0), // Adjust border radius as needed
             ),
@@ -237,7 +239,8 @@ class LunchView extends GetView<LunchController> {
       child: Obx(
         () => Container(
           decoration: BoxDecoration(
-            border: Border.all(color: Color.fromARGB(255, 10, 91, 158)), // Set border color to blue
+            border: Border.all(
+                color: AppColors.siteBlue), // Set border color to blue
             borderRadius:
                 BorderRadius.circular(8.0), // Adjust border radius as needed
           ),
@@ -285,7 +288,7 @@ class LunchView extends GetView<LunchController> {
                 'Please select your dish and calendar dates.',
                 style: TextStyle(color: Colors.white, fontSize: 16.0),
               ),
-              backgroundColor: const Color.fromARGB(255, 4, 67, 120), // Set the background color
+              backgroundColor: AppColors.siteBlue, // Set the background color
             ),
           );
         } else {
@@ -293,7 +296,10 @@ class LunchView extends GetView<LunchController> {
           if (response == 200) {
             controller.booked();
 
-            Get.offAndToNamed(Appstring.home);
+            // Wrap the navigation in Future.delayed
+            Future.delayed(Duration.zero, () {
+              Get.offAllNamed(Appstring.home);
+            });
           }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -301,13 +307,14 @@ class LunchView extends GetView<LunchController> {
                 'Lunch booked successfully!',
                 style: TextStyle(color: Colors.white, fontSize: 16.0),
               ),
-              backgroundColor: const Color.fromARGB(255, 4, 69, 122),
+              backgroundColor: AppColors.siteBlue,
             ),
           );
           print(response);
         }
       },
       label: Text("Book Lunch"),
+      backgroundColor: AppColors.siteBlue,
       icon: Icon(Icons.breakfast_dining),
       backgroundColor: const Color.fromARGB(255, 4, 69, 122),
     );
