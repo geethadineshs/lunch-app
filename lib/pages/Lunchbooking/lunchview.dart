@@ -206,7 +206,7 @@ class LunchView extends GetView<LunchController> {
       child: Obx(() => Container(
             decoration: BoxDecoration(
               border:
-                  Border.all(color: Colors.blue), // Set border color to blue
+                  Border.all(color: Color.fromARGB(255, 10, 91, 158)), // Set border color to blue
               borderRadius:
                   BorderRadius.circular(8.0), // Adjust border radius as needed
             ),
@@ -237,7 +237,7 @@ class LunchView extends GetView<LunchController> {
       child: Obx(
         () => Container(
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.blue), // Set border color to blue
+            border: Border.all(color: Color.fromARGB(255, 10, 91, 158)), // Set border color to blue
             borderRadius:
                 BorderRadius.circular(8.0), // Adjust border radius as needed
           ),
@@ -285,7 +285,7 @@ class LunchView extends GetView<LunchController> {
                 'Please select your dish and calendar dates.',
                 style: TextStyle(color: Colors.white, fontSize: 16.0),
               ),
-              backgroundColor: Colors.blue, // Set the background color
+              backgroundColor: const Color.fromARGB(255, 4, 67, 120), // Set the background color
             ),
           );
         } else {
@@ -301,7 +301,7 @@ class LunchView extends GetView<LunchController> {
                 'Lunch booked successfully!',
                 style: TextStyle(color: Colors.white, fontSize: 16.0),
               ),
-              backgroundColor: Colors.blue,
+              backgroundColor: const Color.fromARGB(255, 4, 69, 122),
             ),
           );
           print(response);
@@ -309,6 +309,7 @@ class LunchView extends GetView<LunchController> {
       },
       label: Text("Book Lunch"),
       icon: Icon(Icons.breakfast_dining),
+      backgroundColor: const Color.fromARGB(255, 4, 69, 122),
     );
   }
 

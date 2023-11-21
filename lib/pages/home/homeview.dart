@@ -44,7 +44,7 @@ class HomeView extends GetView<Homecontroller> {
       },
       label: Text("Book Lunch"),
       icon: Icon(Icons.food_bank_outlined),
-      backgroundColor: Colors.tealAccent,
+      backgroundColor: AppColors.siteBlue,
     );
   }
   // _floatting() {
@@ -66,7 +66,7 @@ class HomeView extends GetView<Homecontroller> {
       },
       label: Text("Cancel Lunch"),
       icon: Icon(Icons.cancel_rounded),
-      backgroundColor: Colors.tealAccent,
+      backgroundColor: AppColors.siteBlue,
     );
   }
 
@@ -292,7 +292,7 @@ class HomeView extends GetView<Homecontroller> {
             DateTime.now().month.toString() +
             "-" +
             DateTime.now().year.toString(),
-        style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w500),
+        style: TextStyle(color: AppColors.siteBlue, fontWeight: FontWeight.w600),
       ),
     ));
   }
@@ -315,7 +315,7 @@ class HomeView extends GetView<Homecontroller> {
                         : controller.lunchOptionId == 1
                             ? "Meals with chapati"
                             : "Chapati only",
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 14),
                   )),
             ],
           ),
