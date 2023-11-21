@@ -37,6 +37,7 @@ Future<void> main() async {
 
   runApp(
     GetMaterialApp(
+      
       initialRoute: Routeconst.initalpath,
       debugShowCheckedModeBanner: false,
       getPages: Routeconst.route,

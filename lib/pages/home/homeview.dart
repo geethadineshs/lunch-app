@@ -6,7 +6,7 @@ import '../../const/Appcolor.dart';
 import '../../const/stringconst.dart';
 import 'homecontroller.dart';
 
-class HomeView extends GetView<Homecontroller> {
+class HomeView extends GetView<Homecontroller>  {
   HomeView({Key? key}) : super(key: key) {
     controller.oninit();
   }

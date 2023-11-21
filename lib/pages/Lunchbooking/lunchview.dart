@@ -37,7 +37,7 @@ class LunchView extends GetView<LunchController> {
   _appbar() {
     return AppBar(
       title: Text("Book Lunch"),
-      backgroundColor: const Color.fromRGBO(0, 76, 152, 1),
+      backgroundColor: const Color.fromARGB(255, 4, 69, 122),
     );
   }
 
@@ -80,8 +80,8 @@ class LunchView extends GetView<LunchController> {
                   .toList();
               print(selectedDateStrings);
             },
-            selectionColor: Colors.siteBlue,
-            rangeSelectionColor: AppColors.siteBlue.withOpacity(0.3),
+            selectionColor: const Color.fromARGB(255, 4, 69, 122),
+            rangeSelectionColor: const Color.fromARGB(255, 4, 69, 122).withOpacity(0.3),
           )
 
           // if (pickedStartDate != null) {
@@ -207,8 +207,8 @@ class LunchView extends GetView<LunchController> {
       padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
       child: Obx(() => Container(
             decoration: BoxDecoration(
-              border: Border.all(
-                  color: AppColors.siteBlue), // Set border color to blue
+              border:
+                  Border.all(color: const Color.fromARGB(255, 4, 69, 122)), // Set border color to blue
               borderRadius:
                   BorderRadius.circular(8.0), // Adjust border radius as needed
             ),
@@ -239,8 +239,7 @@ class LunchView extends GetView<LunchController> {
       child: Obx(
         () => Container(
           decoration: BoxDecoration(
-            border: Border.all(
-                color: AppColors.siteBlue), // Set border color to blue
+            border: Border.all(color: const Color.fromARGB(255, 4, 69, 122)), // Set border color to blue
             borderRadius:
                 BorderRadius.circular(8.0), // Adjust border radius as needed
           ),
@@ -280,6 +279,7 @@ class LunchView extends GetView<LunchController> {
   floatingbutton(context) {
     return FloatingActionButton.extended(
       onPressed: () async {
+         print("Before navigation");
         if (controller.selected.value.isEmpty) {
           // Show a snack bar when any of the fields are empty
           ScaffoldMessenger.of(context).showSnackBar(
@@ -288,18 +288,13 @@ class LunchView extends GetView<LunchController> {
                 'Please select your dish and calendar dates.',
                 style: TextStyle(color: Colors.white, fontSize: 16.0),
               ),
-              backgroundColor: AppColors.siteBlue, // Set the background color
+              backgroundColor: Color.fromARGB(255, 6, 90, 159), // Set the background color
             ),
           );
         } else {
           var response = await controller.booklunch(selectedDateStrings);
           if (response == 200) {
-            controller.booked();
-
-            // Wrap the navigation in Future.delayed
-            Future.delayed(Duration.zero, () {
-              Get.offAllNamed(Appstring.home);
-            });
+            Get.offAllNamed(Appstring.home);
           }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -307,14 +302,13 @@ class LunchView extends GetView<LunchController> {
                 'Lunch booked successfully!',
                 style: TextStyle(color: Colors.white, fontSize: 16.0),
               ),
-              backgroundColor: AppColors.siteBlue,
+              backgroundColor: Color.fromARGB(255, 6, 90, 159),
             ),
           );
           print(response);
         }
       },
       label: Text("Book Lunch"),
-      backgroundColor: AppColors.siteBlue,
       icon: Icon(Icons.breakfast_dining),
       backgroundColor: const Color.fromARGB(255, 4, 69, 122),
     );
@@ -356,7 +350,7 @@ class LunchView extends GetView<LunchController> {
   _bookedpage(context) {
     return Center(
       child: Container(
-        color: Colors.blueAccent,
+        color: const Color.fromARGB(255, 5, 57, 147),
         alignment: Alignment.center,
         child: Text(
           "You have booked you meals",

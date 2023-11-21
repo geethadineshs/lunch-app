@@ -36,7 +36,10 @@ class LunchController extends GetxController {
     
 
     var key = await getusercredential();
+    var count=0;
+
     for (var i in selectedDateStrings) {
+      count++;
       var body = jsonEncode(postbody(foodoption, extra, i));
 
       // print(body.runtimeType);
@@ -57,19 +60,18 @@ class LunchController extends GetxController {
         //print(await response);
 
         if (response.statusCode == 200) {
-          // DateTime currentDate = DateTime.now();
-          // var currentdate = DateFormat("yyyy-MM-dd").format(
-          //     DateTime(currentDate.year, currentDate.month, currentDate.day));
-          // SharedPreferences prefs = await SharedPreferences.getInstance();
-          // await prefs.setString(currentdate.toString(), currentdate.toString());
-          //return response.statusCode;
+         if(selectedDateStrings.length==count)
+         {
+          return response.statusCode;
+         }
         } else {
-          //return response.statusCode;
-          // print("Failed to book date: $i (Status Code: ${response.statusCode})");
+          return response.statusCode;
         }
       } catch (e) {
+        print(e);
+        return e;
         // print("Error while booking date: $i ($e)");
-        return -1;
+        
       }
     }
   }
