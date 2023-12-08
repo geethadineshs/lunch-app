@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
-import 'package:test_app/TeaCoffee/teacoffeeview.dart';
-import '../TeaCoffee/teacoffeebinding.dart';
+import 'package:test_app/pages/MenuList/menulistview.dart';
 import '../pages/Lunchbooking/lunchbinding.dart';
 import '../pages/Lunchbooking/lunchview.dart';
 import '../pages/home/homebinding.dart';
@@ -37,9 +36,9 @@ class Routeconst {
       binding: LunchBinging(),
     ),
     GetPage(
-      name: Appstring.TeaCoffee,
-      page: () => TeaCoffeeView(),
-      binding:TeaCoffeeBinging() ,
+      name: Appstring.menulist,
+      page: () => MenuListView(),
+      binding: LunchBinging() ,
 
     ),
     

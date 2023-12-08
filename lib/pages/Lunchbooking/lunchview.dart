@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:test_app/const/Appcolor.dart';
 // import 'package:test_app/services/notifi_service.dart';
 import '../../const/stringconst.dart';
 import 'lunchcontroller.dart';
@@ -37,7 +38,18 @@ class LunchView extends GetView<LunchController> {
   _appbar() {
     return AppBar(
       title: Text("Book Lunch"),
-      backgroundColor: const Color.fromARGB(255, 4, 69, 122),
+      backgroundColor: Color.fromARGB(255, 34, 2, 74),
+      foregroundColor: AppColors.white,
+      actions: [
+        IconButton(
+            color: AppColors.white,
+            
+            onPressed: () {
+              
+              Get.offNamed(Appstring.home);
+            },
+            icon: Icon(Icons.home))
+      ],
     );
   }
 
@@ -61,6 +73,7 @@ class LunchView extends GetView<LunchController> {
                   date.weekday != DateTime.sunday;
             },
             minDate: DateTime.now(),
+            initialSelectedDate: null,
             onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
               selectedDates.clear(); // Clear the list before adding new dates
               DateTime now = DateTime.now();
@@ -75,13 +88,15 @@ class LunchView extends GetView<LunchController> {
                   selectedDates.add(selectedDate);
                 }
               }
+
               selectedDateStrings = selectedDates
                   .map((date) => date.toString().split(' ')[0])
                   .toList();
               print(selectedDateStrings);
             },
             selectionColor: const Color.fromARGB(255, 4, 69, 122),
-            rangeSelectionColor: const Color.fromARGB(255, 4, 69, 122).withOpacity(0.3),
+            rangeSelectionColor:
+                const Color.fromARGB(255, 4, 69, 122).withOpacity(0.3),
           )
 
           // if (pickedStartDate != null) {
@@ -189,120 +204,151 @@ class LunchView extends GetView<LunchController> {
     );
   }
 
-  _mainmanu1(context) {
-    return SizedBox(
-        height: 20,
-        width: MediaQuery.of(context).size.width,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 30, right: 30, top: 5),
-          child: Text(
-            "Tea or coffee preferences",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-          ),
-        ));
-  }
+  
+Widget _mainmanu1(context) {
+  return SizedBox(
+    height: 30,
+    width: MediaQuery.of(context).size.width,
+    child: Padding(
+      padding: const EdgeInsets.only(left: 30, right: 30, top: 5),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Text(
+          "Tea or coffee preferences",
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        ),
+      ),
+    ),
+  );
+}
 
-  _dropdown() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
-      child: Obx(() => Container(
-            decoration: BoxDecoration(
-              border:
-                  Border.all(color: const Color.fromARGB(255, 4, 69, 122)), // Set border color to blue
-              borderRadius:
-                  BorderRadius.circular(8.0), // Adjust border radius as needed
+_dropdown() {
+  return Padding(
+    padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
+    child: Obx(
+      () => Container(
+        height: 50, // Adjust the height as needed
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color.fromARGB(255, 4, 69, 122),
+          ),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: DropdownButtonFormField(
+          decoration: InputDecoration(
+            border: InputBorder.none, // Remove the default underline
+          ),
+          items: [
+            for (var data in controller.mainiteams.value)
+              DropdownMenuItem(
+                child: Text(data),
+                value: data,
+              ),
+          ],
+          onChanged: (value) => controller.selected.value = value as String,
+          hint: Padding(
+            padding: const EdgeInsets.only(left: 8), // Adjust the left padding as needed
+            child: Text(
+              'Select your dish',
+              style: TextStyle(color: Colors.grey), // Customize the style if needed
             ),
-            child: DropdownButtonFormField(
-                // focusColor: Colors.red,
-                // decoration: InputDecoration(
-                //     enabledBorder: OutlineInputBorder(
-                //         gapPadding: 20,
-                //         borderRadius: BorderRadius.circular(12),
-                //         borderSide:
-                //             BorderSide(color: Colors.indigoAccent, width: 1))),
-                items: [
-                  for (var data in controller.mainiteams.value)
-                    DropdownMenuItem(
-                      child: Text(data),
-                      value: data,
-                    ),
-                ],
-                onChanged: (value) =>
-                    controller.selected.value = value as String),
-          )),
-    );
-  }
+          ),
+          alignment: Alignment.centerLeft, // Align the text to the center
+        ),
+      ),
+    ),
+  );
+}
+
+
 
   _dropdown1() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
-      child: Obx(
-        () => Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: const Color.fromARGB(255, 4, 69, 122)), // Set border color to blue
-            borderRadius:
-                BorderRadius.circular(8.0), // Adjust border radius as needed
+  return Padding(
+    padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
+    child: Obx(
+      () => Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color.fromARGB(255, 4, 69, 122),
           ),
-          child: MultiSelectDialogField(
-            items: controller.extraiteam.value
-                .map((data) => MultiSelectItem<String>(data, data))
-                .toList(),
-            listType: MultiSelectListType.CHIP,
-            onSelectionChanged: (value) {
-              controller.selectedItems = value;
-            },
-            onConfirm: (values) {
-              if (values.isNotEmpty) {
-                List<String> selectedValues = List<String>.from(values);
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: MultiSelectDialogField(
+          items: controller.extraiteam.value
+              .map((data) => MultiSelectItem<String>(data, data))
+              .toList(),
+          listType: MultiSelectListType.CHIP,
+          onSelectionChanged: (value) {
+            controller.selectedItems = value;
+          },
+          onConfirm: (values) {
+            if (values.isNotEmpty) {
+              List<String> selectedValues = List<String>.from(values);
 
-                controller.extra.value =
-                    (selectedValues.isNotEmpty ? selectedValues[0] : null)!;
+              controller.extra.value =
+                  (selectedValues.isNotEmpty ? selectedValues[0] : null)!;
 
-                print('Selected Values: $selectedValues');
-              }
-            },
-            selectedItemsTextStyle: TextStyle(),
-            decoration: BoxDecoration(
-              border: Border.all(
-                  color: Colors
-                      .transparent), // Set default border color to transparent
-              borderRadius: BorderRadius.circular(8.0),
+              print('Selected Values: $selectedValues');
+            }
+          },
+          searchable: false, // Set to true if you want a searchable dropdown
+          buttonText: Text(
+            'Select your preferences',
+            style: TextStyle(fontSize: 16, color: Colors.grey), 
+             // Adjust the font size as needed
+          ), // Placeholder text
+          selectedItemsTextStyle: TextStyle(),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.transparent,
             ),
+            borderRadius: BorderRadius.circular(8.0),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   List<DateTime> selectedDates = [];
   var selectedDateStrings;
   floatingbutton(context) {
     return FloatingActionButton.extended(
       onPressed: () async {
-         print("Before navigation");
+        print("Before navigation");
+
+        // If no date is selected, set today's date as default
+        if (selectedDateStrings.isEmpty) {
+          selectedDateStrings = [DateTime.now().toString().split(' ')[0]];
+        }
+
         if (controller.selected.value.isEmpty) {
-          // Show a snack bar when any of the fields are empty
+          // Show a snack bar when the dish is not selected
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Please select your dish and calendar dates.',
+                'Please select your dish.',
                 style: TextStyle(color: Colors.white, fontSize: 16.0),
               ),
-              backgroundColor: Color.fromARGB(255, 6, 90, 159), // Set the background color
+              backgroundColor: Color.fromARGB(255, 34, 2, 74),
             ),
           );
         } else {
+          // Book lunch using the selectedDateStrings
           var response = await controller.booklunch(selectedDateStrings);
+
           if (response == 200) {
             Get.offAllNamed(Appstring.home);
           }
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
                 'Lunch booked successfully!',
                 style: TextStyle(color: Colors.white, fontSize: 16.0),
               ),
-              backgroundColor: Color.fromARGB(255, 6, 90, 159),
+              backgroundColor: Color.fromARGB(255, 34, 2, 74),
             ),
           );
           print(response);
@@ -310,32 +356,28 @@ class LunchView extends GetView<LunchController> {
       },
       label: Text("Book Lunch"),
       icon: Icon(Icons.breakfast_dining),
-      backgroundColor: const Color.fromARGB(255, 4, 69, 122),
+      backgroundColor: const Color.fromARGB(255, 34, 2, 74),
+      foregroundColor: Colors.white,
     );
   }
 
   Widget _mainmanu(BuildContext context) {
-    return context != null
-        ? SizedBox(
-            height: 20,
-            width: MediaQuery.of(context).size.width,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30, top: 5),
-              child: Text(
-                "Select Your Dish",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-            ),
-          )
-        : Text(
-            "Please fill this field",
-            style: TextStyle(
-              color: Colors.red,
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-            ),
-          );
-  }
+  return SizedBox(
+    height: 30,
+    width: MediaQuery.of(context).size.width,
+    child: Padding(
+      padding: const EdgeInsets.only(left: 30, right: 30, top: 5),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Text(
+          "Select Your Dish",
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    ),
+  );
+}
 
   _cancelfoodfloattingbutton() {
     return FloatingActionButton.extended(

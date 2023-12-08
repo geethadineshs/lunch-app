@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:test_app/TeaCoffee/teacoffeecontroller.dart';
+import '../MenuList/menulistcontroller.dart';
 import '../home/homecontroller.dart';
 import 'splashcontroller.dart';
 
@@ -9,7 +9,9 @@ class SplashBinding extends Bindings
   void dependencies() {
    Get.lazyPut(() => SplashController());
    Get.lazyPut(()=>Homecontroller());
-   Get.lazyPut(()=>TeaCoffeeController());
+   Get.lazyPut(() => MenuListController());
+
+  //  Get.lazyPut(()=>TeaCoffeeController());
   }
 
 }

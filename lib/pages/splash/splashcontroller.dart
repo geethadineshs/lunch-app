@@ -34,7 +34,7 @@ class SplashController extends GetxController {
   Future<void> onload() async {
     // await scheduleNotification();
 
-    Timer(const Duration(seconds: 4), () async {
+    Timer(const Duration(seconds: 6), () async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var key = prefs.getString(Appstring.userkey);
       if (key == null) {

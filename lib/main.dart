@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:test_app/pages/MenuList/menulistcontroller.dart';
+import 'package:get/get.dart';
 
 import 'package:test_app/const/routeconst.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -19,9 +21,12 @@ const AndroidNotificationDetails androidPlatformChannelSpecifics =
 const NotificationDetails platformChannelSpecifics =
     NotificationDetails(android: androidPlatformChannelSpecifics);
 Future<void> main() async {
+      Get.put(MenuListController());
+
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   tz.initializeTimeZones();
+
 
 //  final InitializationSettings initializationSettings = InitializationSettings(
 //     android: AndroidInitializationSettings('flutter_logo'),
@@ -41,6 +46,7 @@ Future<void> main() async {
       initialRoute: Routeconst.initalpath,
       debugShowCheckedModeBanner: false,
       getPages: Routeconst.route,
+      
     ),
   );
   FlutterNativeSplash.remove();
