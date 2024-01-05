@@ -22,6 +22,8 @@ class Homecontroller extends GetxController {
   var todaylunch = "".obs;
   var lunchOptionId = 0.obs;
   var lastname ="".obs;
+
+  get spendtime => null;
   // String get lunchMessage => '';
 
   logout() async {
@@ -155,11 +157,15 @@ if (todaylunch == 0 || todaylunch == -1) {
 
   current_month_lunch_count() async {
     var userid = await getuserid();
+    
     var key = await getusercredential();
     d.log(userid);
     var Month = 'm';
-    var endpoint = Uri.encodeFull(Resource.baseurl +
-        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$Month&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
+    
+    // var endpoint = Uri.encodeFull(Resource.baseurl +
+    //     '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$Month&f[]=user_id&op[user_id]==&v[user_id][]=$userid&f[]=&c[]=spent_on&c[]=$spendOn');
+  var endpoint = Uri.encodeFull(Resource.baseurl +
+        '/acsapi/public/redmine/lunch/$userid/$Month');
 
     try {
       final responce = await http.get(Uri.parse(endpoint), headers: {
@@ -186,7 +192,7 @@ if (todaylunch == 0 || todaylunch == -1) {
     // op[spent_on]=lm - last month
 
     var url = Uri.encodeFull(Resource.baseurl +
-        '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$filter&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
+        '/acsapi/public/redmine/lunch/$userid/$filter');
     var key = await getusercredential();
     try {
       d.log(url);
@@ -219,7 +225,9 @@ if (todaylunch == 0 || todaylunch == -1) {
         Get.snackbar("Time is up", "Book in redmine sorry for inconvenience",
             icon: Icon(Icons.close, color: Color.fromARGB(255, 165, 17, 17)),
             snackPosition: SnackPosition.BOTTOM,
-            snackStyle: SnackStyle.FLOATING);
+            snackStyle: SnackStyle.FLOATING
+            );
+            
       } else {
         Get.offAndToNamed(Appstring.foodorder);
       }

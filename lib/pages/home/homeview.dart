@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:test_app/pages/MenuList/menulistview.dart';
 import 'package:test_app/services/notifi_service.dart';
 
 import '../../const/Appcolor.dart';
 import '../../const/stringconst.dart';
 import 'homecontroller.dart';
 
-class HomeView extends GetView<Homecontroller>  {
+class HomeView extends GetView<Homecontroller> {
   HomeView({Key? key}) : super(key: key) {
     controller.oninit();
   }
@@ -28,7 +29,9 @@ class HomeView extends GetView<Homecontroller>  {
         ),
         floatingActionButton: Stack(
           children: [
-            // Align(child:  _floatting(), alignment: Alignment.bottomLeft,),
+            Align(
+              alignment: Alignment.bottomLeft,
+            ),
             Align(
               child: _flotting(),
               alignment: Alignment.bottomRight,
@@ -40,21 +43,61 @@ class HomeView extends GetView<Homecontroller>  {
   _flotting() {
     return FloatingActionButton.extended(
       onPressed: () {
-        controller.booklunch();
+        DateTime now = DateTime.now();
+        int hour = now.hour;
+        int minute = now.minute;
+
+        if (hour == 2) {
+          if (minute >= 30) {
+            // Show Snackbar for booking after 11:30 am
+            Get.snackbar(
+              "Time is up",
+              "Book in redmine sorry for inconvenience",
+              messageText: Text(
+                "Book in redmine sorry for inconvenience",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              icon: Icon(Icons.close, color: Color.fromARGB(255, 165, 17, 17)),
+              snackPosition: SnackPosition.BOTTOM,
+              snackStyle: SnackStyle.FLOATING,
+            );
+          } else {
+            // Move to "foodorder" page
+            Get.offAndToNamed(Appstring.foodorder);
+          }
+        } else if (hour >= 11) {
+          // Show Snackbar for booking after 12 pm
+          Get.snackbar(
+            "Time is up",
+            "Book in redmine sorry for inconvenience",
+            messageText: Text(
+              "Book in redmine sorry for inconvenience",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            icon: Icon(Icons.close, color: Color.fromARGB(255, 165, 17, 17)),
+            snackPosition: SnackPosition.BOTTOM,
+            snackStyle: SnackStyle.FLOATING,
+          );
+        } else {
+          // Move to "foodorder" page
+          Get.offAndToNamed(Appstring.foodorder);
+        }
       },
       label: Text("Book Lunch"),
       icon: Icon(Icons.food_bank_outlined),
-      backgroundColor: AppColors.siteBlue,
+      backgroundColor: Color.fromARGB(255, 34, 2, 74),
+      foregroundColor: AppColors.white,
     );
   }
+
   // _floatting() {
   //   return FloatingActionButton.extended(
   //     onPressed: () {
-  //       notificationService.showDailyNotification(id: 1,body: 'Hello',title:'test',notificationTime:DateTime(2023, 10, 1));
-  //     },
-  //     label: Text("Push Notifications"),
+  //   Get.to(() => MenuListView());
+  // },
+  //     label: Text("Lunch List"),
   //     icon: Icon(Icons.food_bank_outlined),
-  //     backgroundColor: Colors.tealAccent,
+  //     backgroundColor: Color.fromARGB(255, 34, 2, 74),
 
   //   );
   // }
@@ -73,7 +116,7 @@ class HomeView extends GetView<Homecontroller>  {
   _appbar() {
     print(controller.name);
     return AppBar(
-      backgroundColor: AppColors.siteBlue,
+      backgroundColor: Color.fromARGB(255, 34, 2, 74),
       title: Obx(() => Text(
             "Hi ${controller.name} ${controller.lastname}",
             style: TextStyle(
@@ -83,7 +126,15 @@ class HomeView extends GetView<Homecontroller>  {
                 fontFamily: 'Roboto'),
           )),
       actions: [
+        // IconButton(
+        //   tooltip: 'Delete',
+        //   onPressed: () {
+        //     Get.to(() => MenuListView());
+        //   },
+        //    icon: Icon(Icons.delete),
+        //   ),
         IconButton(
+            color: AppColors.white,
             tooltip: 'Logout',
             onPressed: () {
               controller.logout();
@@ -133,23 +184,28 @@ class HomeView extends GetView<Homecontroller>  {
   }
 
   _monthinfo(context) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(20),
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-              bottomLeft: Radius.circular(20)),
-          side: BorderSide(width: 1, color: AppColors.grey)),
-      child: Column(
-        children: [
-          _cardfirstchild(),
-          _cardsecoundchild(),
-          Container(
-            height: 20,
-          )
-        ],
+    return GestureDetector(
+      onTap: () {
+        Get.to(() => MenuListView());
+      },
+      child: Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(20),
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+                bottomLeft: Radius.circular(20)),
+            side: BorderSide(width: 1, color: AppColors.grey)),
+        child: Column(
+          children: [
+            _cardfirstchild(),
+            _cardsecoundchild(),
+            Container(
+              height: 20,
+            )
+          ],
+        ),
       ),
     );
   }
@@ -161,8 +217,9 @@ class HomeView extends GetView<Homecontroller>  {
       child: Obx(
         () => Text(
           controller.month.value.toString(),
-          style:
-              TextStyle(color: AppColors.siteBlue, fontWeight: FontWeight.w600),
+          style: TextStyle(
+              color: Color.fromARGB(255, 1, 37, 73),
+              fontWeight: FontWeight.w600),
         ),
       ),
     ));
@@ -211,7 +268,8 @@ class HomeView extends GetView<Homecontroller>  {
         child: Obx(() => Text(
               controller.prev_month.value.toString(),
               style: TextStyle(
-                  color: AppColors.siteBlue, fontWeight: FontWeight.w600),
+                  color: Color.fromARGB(255, 1, 34, 68),
+                  fontWeight: FontWeight.w600),
             )),
       ),
     );
@@ -292,35 +350,53 @@ class HomeView extends GetView<Homecontroller>  {
             DateTime.now().month.toString() +
             "-" +
             DateTime.now().year.toString(),
-        style: TextStyle(color: AppColors.siteBlue, fontWeight: FontWeight.w600),
+        style: TextStyle(
+            color: Color.fromARGB(255, 1, 36, 70), fontWeight: FontWeight.w600),
       ),
     ));
   }
 
-  _selectedOption() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Column(
-            children: [
-              Text(
-                "Main Course",
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-              Obx(() => Text(
-                    controller.lunchOptionId == 0
-                        ? "No Lunch Option"
-                        : controller.lunchOptionId == 1
-                            ? "Meals with chapati"
-                            : "Chapati only",
-                    style: TextStyle(fontSize: 14),
-                  )),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+ _selectedOption() {
+  return Padding(
+    padding: const EdgeInsets.only(top: 10),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Column(
+          children: [
+            Text(
+              "Main Course",
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+            Obx(() {
+              if (controller.lunchOptionId == 3) {
+                return Text(
+                  "No Lunch Option",
+                  style: TextStyle(fontSize: 14),
+                );
+              } else if (controller.lunchOptionId == 1) {
+                return Text(
+                  "Meals with chapati",
+                  style: TextStyle(fontSize: 14),
+                );
+              } else if (controller.lunchOptionId == 2) {
+                return Text(
+                  "Chapati only",
+                  style: TextStyle(fontSize: 14),
+                );
+              }else {
+                return Text(
+                  "No Lunch Option",
+                );
+              }
+            }),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+
+
 }

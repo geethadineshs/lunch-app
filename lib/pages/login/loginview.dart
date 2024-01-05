@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:test_app/const/Appcolor.dart';
 import 'package:test_app/pages/login/logincontroller.dart';
+
 class LogininView extends GetView<LoginController> {
   LogininView({Key? key}) : super(key: key);
   final formkey = GlobalKey<FormState>();
@@ -44,8 +46,8 @@ class LogininView extends GetView<LoginController> {
       alignment: Alignment.center,
       child: SvgPicture.asset(
         'assets/acs_logo.svg',
-        placeholderBuilder: (BuildContext context) => Container(
-            child: const CircularProgressIndicator()),
+        placeholderBuilder: (BuildContext context) =>
+            Container(child: const CircularProgressIndicator()),
       ),
     );
   }
@@ -58,7 +60,7 @@ class LogininView extends GetView<LoginController> {
             _username(),
             _password(),
             _button(context),
-                    ],
+          ],
         ));
   }
 
@@ -139,6 +141,7 @@ class LogininView extends GetView<LoginController> {
       child: Text("Login"),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.black,
+        foregroundColor: AppColors.white,
         shape: StadiumBorder(),
         minimumSize: Size(MediaQuery.of(context).size.width * 0.8,
             MediaQuery.of(context).size.height * 0.075),
@@ -146,4 +149,3 @@ class LogininView extends GetView<LoginController> {
     );
   }
 }
-
