@@ -15,4 +15,5 @@ class Appstring {
   static const menulist="/menulist";
   static const lastname="lastname";
   static const spend_on="spend_on";
+  static const deletedEntries ="deletedEntries";
 }
