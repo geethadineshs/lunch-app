@@ -9,7 +9,7 @@ class MenuListView extends GetView<MenuListController> {
   MenuListView({Key? key}) : super(key: key) {
     controller.init();
   }
-final GlobalKey<State> _keyLoader = GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   @override
   Widget build(BuildContext context) {
@@ -215,8 +215,10 @@ final GlobalKey<State> _keyLoader = GlobalKey<State>();
                                                       );
 
                                                       var id = entry['id'];
+                                                      var date = entry['date'];
                                                       await controller
-                                                          .deleteEntries(id);
+                                                          .deleteEntries(
+                                                              id, date);
 
                                                       // Hide loader once deletion is complete
                                                       Navigator.of(context,

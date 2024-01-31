@@ -60,7 +60,9 @@ class LoginController extends GetxController {
         prefs.setString(Appstring.userid, name);
         prefs.setString(Appstring.loginid, id);
         prefs.setString(Appstring.lastname, lastname);
-      Get.offNamed(Appstring.home);
+        Get.offNamed(Appstring.home);
+        Get.offNamed(Appstring.deletedEntries);
+
     }
     //(Appstring.home);
   }

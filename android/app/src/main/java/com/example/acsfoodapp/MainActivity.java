@@ -1,4 +1,4 @@
-package com.acs.lunchapp;
+package com.lunchapp.acs;
 
 import io.flutter.embedding.android.FlutterActivity;
 

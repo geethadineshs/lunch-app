@@ -43,6 +43,7 @@ class HomeView extends GetView<Homecontroller> {
   _flotting() {
     return FloatingActionButton.extended(
       onPressed: () {
+       
         DateTime now = DateTime.now();
         int hour = now.hour;
         int minute = now.minute;
@@ -65,7 +66,7 @@ class HomeView extends GetView<Homecontroller> {
             // Move to "foodorder" page
             Get.offAndToNamed(Appstring.foodorder);
           }
-        } else if (hour >= 11) {
+        } else if (hour >= 119) {
           // Show Snackbar for booking after 12 pm
           Get.snackbar(
             "Time is up",
@@ -134,13 +135,33 @@ class HomeView extends GetView<Homecontroller> {
         //    icon: Icon(Icons.delete),
         //   ),
         IconButton(
-            color: AppColors.white,
-            tooltip: 'Logout',
-            onPressed: () {
-              controller.logout();
-              Get.offNamed(Appstring.login);
-            },
-            icon: Icon(Icons.logout))
+  color: AppColors.white,
+  tooltip: 'Logout',
+  onPressed: () {
+    Get.defaultDialog(
+      title: "Logout",
+      content: Text("Are you sure you want to logout?"),
+      actions: [
+        TextButton(
+          onPressed: () {
+           Get.offNamed(Appstring.login);
+          },
+          child: Text("Logout"),
+        ),
+        TextButton(
+          onPressed: () {
+            controller.logout();
+            Get.offNamed(Appstring.login);
+            Get.back(); // Close the dialog after logout
+          },
+          child: Text("Cancel"),
+        ),
+      ],
+    );
+  },
+  icon: Icon(Icons.logout),
+)
+
       ],
     );
   }

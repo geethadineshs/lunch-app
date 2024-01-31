@@ -7,6 +7,7 @@ import 'package:test_app/pages/MenuList/menulistcontroller.dart';
 import 'package:get/get.dart';
 
 import 'package:test_app/const/routeconst.dart';
+import 'package:test_app/services/notifi_service.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -21,12 +22,11 @@ const AndroidNotificationDetails androidPlatformChannelSpecifics =
 const NotificationDetails platformChannelSpecifics =
     NotificationDetails(android: androidPlatformChannelSpecifics);
 Future<void> main() async {
-      Get.put(MenuListController());
+  Get.put(MenuListController());
 
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   tz.initializeTimeZones();
-
 
 //  final InitializationSettings initializationSettings = InitializationSettings(
 //     android: AndroidInitializationSettings('flutter_logo'),
@@ -39,14 +39,18 @@ Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   //NotificationService().initNotification();
+  await MenuListController().init();
+  var menuListController = MenuListController();
+  await menuListController.init();
 
+  // Load deleted entries from shared preferences
+  await menuListController.loadDeletedEntries();
+  await NotificationService().initNotification();
   runApp(
     GetMaterialApp(
-      
       initialRoute: Routeconst.initalpath,
       debugShowCheckedModeBanner: false,
       getPages: Routeconst.route,
-      
     ),
   );
   FlutterNativeSplash.remove();

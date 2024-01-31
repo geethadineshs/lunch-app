@@ -21,7 +21,7 @@ class Homecontroller extends GetxController {
   var isbooked = false.obs;
   var todaylunch = "".obs;
   var lunchOptionId = 0.obs;
-  var lastname ="".obs;
+  var lastname = "".obs;
 
   get spendtime => null;
   // String get lunchMessage => '';
@@ -53,7 +53,7 @@ class Homecontroller extends GetxController {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var username = prefs.getString('userid');
       name.value = username as String;
-      lastname.value=prefs.getString(Appstring.lastname)!;
+      lastname.value = prefs.getString(Appstring.lastname)!;
       // List spend=responc[]
       Set spendtime = {};
       var timeentry = response["time_entries"];
@@ -102,30 +102,31 @@ class Homecontroller extends GetxController {
     }
 
     var todaylunch = await getTodaLunch();
-print(todaylunch['time_entries'].toString());
+    print(todaylunch['time_entries'].toString());
 
+    print(todaylunch.toString() + "hjsdjh");
 
+    if (todaylunch == 0 || todaylunch == -1) {
+      // Handle errors or no data here
+    } else {
+      try {
+        List<dynamic> customFields =
+            todaylunch['time_entries'][0]['custom_fields'];
 
-print(todaylunch.toString() + "hjsdjh");
-
-if (todaylunch == 0 || todaylunch == -1) {
-  // Handle errors or no data here
-} else {
-  try {
-    List<dynamic> customFields = todaylunch['time_entries'][0]['custom_fields'];
-
-    for (var field in customFields) {
-      if (field['name'] == "Lunch Option") { // Check for the desired field name
-        lunchOptionId.value =int.parse(field['value']); // Access the "value" property and parse it to an integer
-        // todaylunch.value = lunchOptionId.toString(); // Update the observable
-        print("Lunch Option ID: $lunchOptionId");
-        break; // If found, exit the loop
+        for (var field in customFields) {
+          if (field['name'] == "Lunch Option") {
+            // Check for the desired field name
+            lunchOptionId.value = int.parse(field[
+                'value']); // Access the "value" property and parse it to an integer
+            // todaylunch.value = lunchOptionId.toString(); // Update the observable
+            print("Lunch Option ID: $lunchOptionId");
+            break; // If found, exit the loop
+          }
+        }
+      } catch (e) {
+        this.todaylunch.value = 'false';
       }
     }
-  } catch (e) {
-    this.todaylunch.value = 'false';
-  }
-}
 // String lunchMessage;
 
 // if (lunchOptionId == 1) {
@@ -140,7 +141,6 @@ if (todaylunch == 0 || todaylunch == -1) {
 // print("Lunch Message: $lunchMessage");
 // print(lunchOptionId);
 // todaylunch.value = lunchMessage;
-
   }
 
   getusercredential() async {
@@ -157,15 +157,15 @@ if (todaylunch == 0 || todaylunch == -1) {
 
   current_month_lunch_count() async {
     var userid = await getuserid();
-    
+
     var key = await getusercredential();
     d.log(userid);
     var Month = 'm';
-    
+
     // var endpoint = Uri.encodeFull(Resource.baseurl +
     //     '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$Month&f[]=user_id&op[user_id]==&v[user_id][]=$userid&f[]=&c[]=spent_on&c[]=$spendOn');
-  var endpoint = Uri.encodeFull(Resource.baseurl +
-        '/acsapi/public/redmine/lunch/$userid/$Month');
+    var endpoint = Uri.encodeFull(
+        Resource.baseurl + '/acsapi/public/redmine/lunch/$userid/$Month');
 
     try {
       final responce = await http.get(Uri.parse(endpoint), headers: {
@@ -191,8 +191,8 @@ if (todaylunch == 0 || todaylunch == -1) {
     // op[spent_on]=m - current month
     // op[spent_on]=lm - last month
 
-    var url = Uri.encodeFull(Resource.baseurl +
-        '/acsapi/public/redmine/lunch/$userid/$filter');
+    var url = Uri.encodeFull(
+        Resource.baseurl + '/acsapi/public/redmine/lunch/$userid/$filter');
     var key = await getusercredential();
     try {
       d.log(url);
@@ -225,9 +225,7 @@ if (todaylunch == 0 || todaylunch == -1) {
         Get.snackbar("Time is up", "Book in redmine sorry for inconvenience",
             icon: Icon(Icons.close, color: Color.fromARGB(255, 165, 17, 17)),
             snackPosition: SnackPosition.BOTTOM,
-            snackStyle: SnackStyle.FLOATING
-            );
-            
+            snackStyle: SnackStyle.FLOATING);
       } else {
         Get.offAndToNamed(Appstring.foodorder);
       }
@@ -258,6 +256,7 @@ if (todaylunch == 0 || todaylunch == -1) {
 
     var url = Uri.encodeFull(Resource.baseurl +
         '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=$filter&f[]=user_id&op[user_id]==&v[user_id][]=$userid');
+
     var key = await getusercredential();
     try {
       final response = await http.get(Uri.parse(url), headers: {
@@ -303,15 +302,13 @@ if (todaylunch == 0 || todaylunch == -1) {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userid = await getuserid();
     var filter = 't';
-    // https://pm.agilecyber.co.uk/projects/lunch/time_entries?utf8=✓&set_filter=1&sort=spent_on:desc&f[]=spent_on&op[spent_on]=lm&f[]=user_id&op[user_id]==&v[user_id][]=153
-    // op[spent_on]=m - current month
-    // op[spent_on]=lm - last month group_by=cf_41
 
     var url = Uri.encodeFull(Resource.baseurl +
         Resource.lunchcountapi +
         'sort=spent_on:desc&f[]=spent_on&op[spent_on]=$filter&f[]=user_id&op[user_id]==&v[user_id][]=$userid&f[]=&c[]=spent_on&c[]=user&c[]=activity&c[]=issue&c[]=comments&c[]=hours&c[]=cf_59&c[]=cf_63&c[]=project&group_by=cf_41&t[]=hours&t[]=&spent_type=T');
     print("url $url");
     var key = await getusercredential();
+
     try {
       d.log(url);
 
@@ -319,14 +316,40 @@ if (todaylunch == 0 || todaylunch == -1) {
         "Content-Type": "application/json",
         "Authorization": "Basic $key",
       });
+
       if (response.statusCode == 200) {
-        Map<String, dynamic> jsonResponse = json.decode(response.body);
+        // Parse the response correctly
+        Map<String, dynamic> jsonResponse =
+            json.decode(utf8.decode(response.bodyBytes));
+
+        // Use a set to store unique dates
+        Set<String> uniqueDates = {};
+
+        // Filter out repeated dates and keep only the first entry for each date
+        jsonResponse['time_entries'] =
+            jsonResponse['time_entries'].where((entry) {
+          String dateStr = entry['spent_on'];
+          DateTime date = DateTime.parse(dateStr);
+          String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+
+          // Check if this date has already been processed
+          if (!uniqueDates.contains(formattedDate)) {
+            // Mark this date as processed
+            uniqueDates.add(formattedDate);
+
+            return true;
+          } else {
+            return false;
+          }
+        }).toList();
+
         return jsonResponse;
       } else {
-        return 0;
+        return {'error': 'Failed to fetch data'};
       }
     } catch (e) {
-      return -1;
+      print("Exception occurred: $e");
+      return {'error': 'Exception occurred: $e'};
     }
   }
 }
