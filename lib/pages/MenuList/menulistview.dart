@@ -4,6 +4,7 @@ import 'package:test_app/const/Appcolor.dart';
 import 'package:test_app/const/stringconst.dart';
 import 'package:test_app/pages/MenuList/menulistcontroller.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:test_app/pages/home/homecontroller.dart';
 
 class MenuListView extends GetView<MenuListController> {
   MenuListView({Key? key}) : super(key: key) {
@@ -292,6 +293,13 @@ class MenuListView extends GetView<MenuListController> {
       centerTitle: true, // Center-align the title
       backgroundColor: const Color.fromARGB(255, 34, 2, 74),
       foregroundColor: AppColors.white,
+
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () async {
+          Get.offNamed(Appstring.home);
+        },
+      ),
     );
   }
 }

@@ -30,6 +30,7 @@ class Homecontroller extends GetxController {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('userid');
     await prefs.remove("key");
+        Get.offNamed('login');
   }
 //     void setSelectedDishBasedOnLogic() async {
 //     // Replace this with your actual logic to determine the selected dish

@@ -16,4 +16,6 @@ class Appstring {
   static const lastname="lastname";
   static const spend_on="spend_on";
   static const deletedEntries ="deletedEntries";
+  static const requests = "/requests";
+  static const leaverequest="/leaverequest";
 }

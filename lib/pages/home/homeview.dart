@@ -37,7 +37,9 @@ class HomeView extends GetView<Homecontroller> {
               alignment: Alignment.bottomRight,
             )
           ],
-        ));
+        ),
+        bottomNavigationBar: BottomNavigationBars(),
+        );
   }
 
   _flotting() {
@@ -421,3 +423,43 @@ class HomeView extends GetView<Homecontroller> {
 
 
 }
+class BottomNavigationBars extends StatefulWidget {
+  @override
+  _BottomNavigationBarsState createState() =>
+      _BottomNavigationBarsState();
+}
+
+class _BottomNavigationBarsState extends State<BottomNavigationBars> {
+  int _currentIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      currentIndex: _currentIndex,
+      onTap: (index) {
+        setState(() {
+          _currentIndex = index;
+        });
+
+        if (index == 0 && index != 1) {
+          Get.offNamed('/home');
+        } else if (index == 1) {
+          Get.offNamed('/requests');
+        }
+      },
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.request_page),
+          label: 'Requests',
+        ),
+      ],
+      selectedItemColor: Color.fromARGB(255, 1, 37, 73),
+
+    );
+  }
+}
+

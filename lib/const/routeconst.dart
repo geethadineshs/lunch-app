@@ -1,5 +1,9 @@
 import 'package:get/get.dart';
 import 'package:test_app/pages/MenuList/menulistview.dart';
+import 'package:test_app/pages/leaverequest/leaverequestbinding.dart';
+import 'package:test_app/pages/leaverequest/leaverequestview.dart';
+import 'package:test_app/pages/requests/requestbinding.dart';
+import 'package:test_app/pages/requests/requestview.dart';
 import '../pages/Lunchbooking/lunchbinding.dart';
 import '../pages/Lunchbooking/lunchview.dart';
 import '../pages/home/homebinding.dart';
@@ -13,7 +17,7 @@ import 'stringconst.dart';
 class Routeconst {
   Routeconst._();
   static const initalpath = Appstring.intital;
-    
+
   static final route = [
     GetPage(
       name: initalpath,
@@ -38,9 +42,17 @@ class Routeconst {
     GetPage(
       name: Appstring.menulist,
       page: () => MenuListView(),
-      binding: LunchBinging() ,
-
+      binding: LunchBinging(),
     ),
-    
+    GetPage(
+      name: Appstring.requests,
+      page: () => RequestView(),
+      binding: RequestBinging(),
+    ),
+    GetPage(
+      name: Appstring.leaverequest,
+      page: () => LeaveRequestView(),
+      binding: LeaveRequestBinging(),
+    ),
   ];
 }
