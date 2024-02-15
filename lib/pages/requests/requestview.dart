@@ -67,7 +67,7 @@ class RequestView extends GetView<RequestViewController> {
             ],
           ),
         ),
-        bottomNavigationBar: CustomBottomNavigationBar());
+        bottomNavigationBar: BottomNavigationBars());
   }
 
   Widget _video() {
