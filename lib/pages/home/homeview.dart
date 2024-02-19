@@ -16,36 +16,62 @@ class HomeView extends GetView<Homecontroller> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: _appbar(),
-        body: RefreshIndicator(
-          onRefresh: () async {
-            // You can put your refresh logic here
-            await Future.delayed(Duration(seconds: 1));
+      appBar: _appbar(),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          // You can put your refresh logic here
+          await Future.delayed(Duration(seconds: 1));
 
-            controller.oninit();
-            // Refresh completed
+          controller.oninit();
+          // Refresh completed
+        },
+        child: _body(context),
+      ),
+      floatingActionButton: Stack(
+        children: [
+          Align(
+            alignment: Alignment.bottomLeft,
+          ),
+          Align(
+            child: _flotting(),
+            alignment: Alignment.bottomRight,
+          )
+        ],
+      ),
+      bottomNavigationBar: Obx(
+        () => BottomNavigationBar(
+          currentIndex: controller.currentIndex.value,
+          onTap: (index) {
+            controller.changeIndex(index);
+            if (controller.prevIndex.value == index) {
+              return;
+            }
+            if (index == 0) {
+              Get.offNamed('/home');
+            } else if (index == 1) {
+              Get.offNamed('/requests');
+            }
           },
-          child: _body(context),
-        ),
-        floatingActionButton: Stack(
-          children: [
-            Align(
-              alignment: Alignment.bottomLeft,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
             ),
-            Align(
-              child: _flotting(),
-              alignment: Alignment.bottomRight,
-            )
+            BottomNavigationBarItem(
+              icon: Icon(Icons.request_page),
+              label: 'Requests',
+            ),
           ],
+          selectedItemColor: 
+              Color.fromARGB(255, 1, 37, 73)
         ),
-        bottomNavigationBar: BottomNavigationBars(),
-        );
+      ),
+    );
   }
 
   _flotting() {
     return FloatingActionButton.extended(
       onPressed: () {
-       
         DateTime now = DateTime.now();
         int hour = now.hour;
         int minute = now.minute;
@@ -137,33 +163,32 @@ class HomeView extends GetView<Homecontroller> {
         //    icon: Icon(Icons.delete),
         //   ),
         IconButton(
-  color: AppColors.white,
-  tooltip: 'Logout',
-  onPressed: () {
-    Get.defaultDialog(
-      title: "Logout",
-      content: Text("Are you sure you want to logout?"),
-      actions: [
-        TextButton(
+          color: AppColors.white,
+          tooltip: 'Logout',
           onPressed: () {
-           Get.offNamed(Appstring.login);
+            Get.defaultDialog(
+              title: "Logout",
+              content: Text("Are you sure you want to logout?"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Get.offNamed(Appstring.login);
+                  },
+                  child: Text("Logout"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    controller.logout();
+                    Get.offNamed(Appstring.login);
+                    Get.back(); // Close the dialog after logout
+                  },
+                  child: Text("Cancel"),
+                ),
+              ],
+            );
           },
-          child: Text("Logout"),
-        ),
-        TextButton(
-          onPressed: () {
-            controller.logout();
-            Get.offNamed(Appstring.login);
-            Get.back(); // Close the dialog after logout
-          },
-          child: Text("Cancel"),
-        ),
-      ],
-    );
-  },
-  icon: Icon(Icons.logout),
-)
-
+          icon: Icon(Icons.logout),
+        )
       ],
     );
   }
@@ -419,47 +444,35 @@ class HomeView extends GetView<Homecontroller> {
     ),
   );
 }
-
-
-
 }
-class BottomNavigationBars extends StatefulWidget {
-  @override
-  _BottomNavigationBarsState createState() =>
-      _BottomNavigationBarsState();
-}
-
-class _BottomNavigationBarsState extends State<BottomNavigationBars> {
-  int _currentIndex = 0;
+class CustomBottomNavigationBar extends StatelessWidget {
+  final RxInt _currentIndex = 1.obs;
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: _currentIndex,
-      onTap: (index) {
-        setState(() {
-          _currentIndex = index;
-        });
-
-        if (index == 0 && index != 1) {
-          Get.offNamed('/home');
-        } else if (index == 1) {
-          Get.offNamed('/requests');
-        }
-      },
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.request_page),
-          label: 'Requests',
-        ),
-      ],
-      selectedItemColor: Color.fromARGB(255, 1, 37, 73),
-
+    return Obx(
+      () => BottomNavigationBar(
+        currentIndex: _currentIndex.value,
+        onTap: (index) {
+          _currentIndex.value = index;
+          if (index == 1) {
+            Get.offNamed('/requests');
+          } else if (index == 0) {
+            Get.offNamed('/home');
+          }
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.request_page),
+            label: 'Requests',
+          ),
+        ],
+        selectedItemColor: Color.fromARGB(255, 1, 37, 73),
+      ),
     );
   }
 }
-

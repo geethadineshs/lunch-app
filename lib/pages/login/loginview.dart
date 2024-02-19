@@ -19,11 +19,9 @@ class LogininView extends GetView<LoginController> {
     return Obx(
       () => (controller.loader.value)
           ? SingleChildScrollView(child: _loginoutline(context))
-          : Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child:
-                  Expanded(child: Center(child: CircularProgressIndicator()))),
+          : Center(
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 

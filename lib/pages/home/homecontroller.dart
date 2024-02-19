@@ -22,6 +22,19 @@ class Homecontroller extends GetxController {
   var todaylunch = "".obs;
   var lunchOptionId = 0.obs;
   var lastname = "".obs;
+  var currentIndex = 0.obs;
+  var prevIndex = 0.obs;
+
+/// The function "changeIndex" updates the values of "prevIndex" and "currentIndex" with the given
+/// "index" value.
+/// 
+/// Args:
+///   index (int): The index parameter is an integer value that represents the new index value to be
+/// assigned to the currentIndex variable.
+  void changeIndex(int index) {
+    prevIndex.value = currentIndex.value;
+    currentIndex.value = index; 
+  }
 
   get spendtime => null;
   // String get lunchMessage => '';
@@ -30,7 +43,7 @@ class Homecontroller extends GetxController {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('userid');
     await prefs.remove("key");
-        Get.offNamed('login');
+    Get.offAllNamed(Appstring.login);
   }
 //     void setSelectedDishBasedOnLogic() async {
 //     // Replace this with your actual logic to determine the selected dish

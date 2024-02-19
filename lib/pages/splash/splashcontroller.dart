@@ -22,7 +22,8 @@ class SplashController extends GetxController {
       0,
       'Scheduled Title',
       'Scheduled Body',
-      tz.TZDateTime(tz.local,DateTime.now().year,DateTime.now().month,DateTime.now().day, 12,23),
+      tz.TZDateTime(tz.local, DateTime.now().year, DateTime.now().month,
+          DateTime.now().day, 12, 23),
       platformChannelSpecifics,
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
@@ -38,7 +39,7 @@ class SplashController extends GetxController {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var key = prefs.getString(Appstring.userkey);
       if (key == null) {
-        Get.offNamed(Appstring.login);
+        Get.offAllNamed(Appstring.login);
       } else {
         Get.offAllNamed(Appstring.home);
       }

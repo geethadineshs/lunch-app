@@ -13,12 +13,7 @@ class LeaveRequestView extends GetView<LeaveRequestController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appbar(),
-      body: Positioned(
-        top: 0,
-        left: 0,
-        right: 0,
-        child: _buildForm(context),
-      ),
+      body: _buildForm(context),
     );
   }
 
@@ -35,50 +30,50 @@ class LeaveRequestView extends GetView<LeaveRequestController> {
   }
 
   Widget _buildForm(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.9,
-          decoration: BoxDecoration(
-            color: Color(0xFFCCCCFF),
-            borderRadius: BorderRadius.circular(10.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: Offset(0, 3),
-              ),
-            ],
-          ),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: Form(
-                key: controller.formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    titleForm('Leave Type'),
-                    _dropdown(),
-                    SizedBox(height: 16.0),
-                    titleForm('Start Date'),
-                    _startDate(context),
-                    SizedBox(height: 16.0),
-                    titleForm('End Date'),
-                    _endDate(context),
-                    SizedBox(height: 16.0),
-                    titleForm('Reason'),
-                    _comment(),
-                    SizedBox(height: 16.0),
-                    _submit(),
-                  ],
+    return Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: MediaQuery.of(context).size.height * 0.8,
+        decoration: BoxDecoration(
+          color: Color(0xFFCCCCFF),
+          borderRadius: BorderRadius.circular(10.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(
+                top: 35, right: 10.0, left: 10, bottom: 10),
+            child: Form(
+              key: controller.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  titleForm('Leave Type'),
+                  _dropdown(),
+                  SizedBox(height: 16.0),
+                  titleForm('Start Date'),
+                  _startDate(context),
+                  SizedBox(height: 16.0),
+                  titleForm('End Date'),
+                  _endDate(context),
+                  SizedBox(height: 16.0),
+                  titleForm('Reason'),
+                  _comment(),
+                  SizedBox(height: 16.0),
+                  _submit(),
+                ],
                 ),
               ),
             ),
           ),
         ),
-      ),
     );
   }
 

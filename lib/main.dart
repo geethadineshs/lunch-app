@@ -63,7 +63,7 @@ Future<void> scheduleNotification() async {
     'Scheduled Title',
     'Scheduled Body',
     tz.TZDateTime(tz.local, DateTime.now().year, DateTime.now().month,
-        DateTime.now().day, 1, 06),
+        DateTime.now().day, 1, 11),
     platformChannelSpecifics,
     androidAllowWhileIdle: true,
     uiLocalNotificationDateInterpretation:

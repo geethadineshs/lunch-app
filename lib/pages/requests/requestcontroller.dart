@@ -18,7 +18,7 @@ class RequestViewController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    videoController = VideoPlayerController.asset('Taking notes.mp4')
+    videoController = VideoPlayerController.asset('assets/demo.mp4')
       ..initialize().then((_) {
         videoController.setLooping(true);
         videoController.play();

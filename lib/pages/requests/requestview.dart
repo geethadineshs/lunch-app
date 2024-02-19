@@ -7,6 +7,7 @@ import 'package:test_app/const/Appcolor.dart';
 import 'package:test_app/const/stringconst.dart';
 import 'package:test_app/pages/home/homeview.dart';
 import 'package:test_app/pages/requests/requestcontroller.dart';
+import 'package:video_player/video_player.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class RequestView extends GetView<RequestViewController> {
@@ -14,89 +15,79 @@ class RequestView extends GetView<RequestViewController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appbar(),
-      body: Center(
-        child: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color.fromARGB(255, 113, 108, 247),
-                      Color.fromARGB(255, 47, 66, 174),
-                      Color.fromARGB(255, 6, 4, 48)
-                    ], // Blue to Yellow gradient
-                  ),
-                ),
-                height: 250,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0, bottom: 80),
-                  child: Center(
-                    child: CircleAvatar(
-                      radius: 150,
-                      backgroundColor: Color.fromARGB(255, 218, 218, 237),
-                      child: SvgPicture.asset(
-                        'assets/acs_logo.svg',
-                        placeholderBuilder: (BuildContext context) =>
-                            Container(child: const CircularProgressIndicator()),
+        appBar: _appbar(),
+        body: Center(
+          child: Stack(
+            children: [
+              Positioned(
+                top: 250,
+                left: 0,
+                right: 0,
+                child: _video(),
+              ),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  decoration: BoxDecoration(
+                    // color: Color.fromARGB(255, 229, 229, 243),
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.white.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3),
                       ),
-                    ),
+                    ],
+                  ),
+                  child: ListView(
+                    children: [
+                      SizedBox(height: 50),
+                      RequestCard(
+                        title: 'Leave Request',
+                        formUrl:
+                            'https://pm.agilecyber.co.uk/wkleaverequest/edit',
+                      ),
+                      SizedBox(height: 5),
+                      RequestCard(
+                        title: 'Permission Request',
+                        formUrl: 'https://forms.office.com/r/66E26dwVFf',
+                      ),
+                      SizedBox(height: 5),
+                      RequestCard(
+                        title: 'Work from Home Request',
+                        formUrl: 'https://forms.office.com/r/KH8HnMWPgp',
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              top: 200,
-              left: 20,
-              right: 20,
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.45,
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 229, 229, 243),
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: ListView(
-                  children: [
-                    SizedBox(height: 50),
-                    RequestCard(
-                      title: 'Leave Request',
-                      formUrl:
-                          'https://pm.agilecyber.co.uk/wkleaverequest/edit',
-                    ),
-                    SizedBox(height: 5),
-                    RequestCard(
-                      title: 'Permission Request',
-                      formUrl: 'https://forms.office.com/r/66E26dwVFf',
-                    ),
-                    SizedBox(height: 5),
-                    RequestCard(
-                      title: 'Work from Home Request',
-                      formUrl: 'https://forms.office.com/r/KH8HnMWPgp',
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBars(),
+        bottomNavigationBar: CustomBottomNavigationBar());
+  }
+
+  Widget _video() {
+    return GetBuilder<RequestViewController>(
+      builder: (controller) {
+        return controller.videoController.value.isInitialized
+            ? AspectRatio(
+                aspectRatio: controller.videoController.value.aspectRatio,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    VideoPlayer(controller.videoController),
+                    if (!controller.videoController.value.isPlaying)
+                      CircularProgressIndicator(),
+                  ],
+                ),
+              )
+            : CircularProgressIndicator();
+      },
     );
   }
 
