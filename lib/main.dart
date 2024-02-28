@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_app/const/stringconst.dart';
 import 'package:test_app/pages/MenuList/menulistcontroller.dart';
 import 'package:get/get.dart';
 
@@ -46,13 +50,26 @@ Future<void> main() async {
   // Load deleted entries from shared preferences
   await menuListController.loadDeletedEntries();
   await NotificationService().initNotification();
-  runApp(
-    GetMaterialApp(
-      initialRoute: Routeconst.initalpath,
-      debugShowCheckedModeBanner: false,
-      getPages: Routeconst.route,
-    ),
-  );
+  Timer(const Duration(seconds: 6), () async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var key = prefs.getString(Appstring.userkey);
+    if (key == null) {
+      runApp(
+        GetMaterialApp(
+          initialRoute: Appstring.login,
+          debugShowCheckedModeBanner: false,
+          getPages: Routeconst.route,
+        ),
+      );
+    } else {
+      runApp(GetMaterialApp(
+        initialRoute: Appstring.home,
+        debugShowCheckedModeBanner: false,
+        getPages: Routeconst.route,
+      ));
+    }
+  });
+
   FlutterNativeSplash.remove();
   await scheduleNotification();
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -366,4 +367,18 @@ class Homecontroller extends GetxController {
       return {'error': 'Exception occurred: $e'};
     }
   }
+   Future<void> onload() async {
+    // await scheduleNotification();
+
+    Timer(const Duration(seconds: 6), () async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var key = prefs.getString(Appstring.userkey);
+      if (key == null) {
+        Get.offAllNamed(Appstring.login);
+      } else {
+        Get.offAllNamed(Appstring.home);
+      }
+    });
+  }
+
 }

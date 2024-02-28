@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:test_app/pages/MenuList/menulistview.dart';
 import 'package:test_app/services/notifi_service.dart';
@@ -40,31 +41,29 @@ class HomeView extends GetView<Homecontroller> {
       ),
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
-          currentIndex: controller.currentIndex.value,
-          onTap: (index) {
-            controller.changeIndex(index);
-            if (controller.prevIndex.value == index) {
-              return;
-            }
-            if (index == 0) {
-              Get.offNamed('/home');
-            } else if (index == 1) {
-              Get.offNamed('/requests');
-            }
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.request_page),
-              label: 'Requests',
-            ),
-          ],
-          selectedItemColor: 
-              Color.fromARGB(255, 1, 37, 73)
-        ),
+            currentIndex: controller.currentIndex.value,
+            onTap: (index) {
+              controller.changeIndex(index);
+              if (controller.prevIndex.value == index) {
+                return;
+              }
+              if (index == 0) {
+                Get.offNamed('/home');
+              } else if (index == 1) {
+                Get.offNamed('/requests');
+              }
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.request_page),
+                label: 'Requests',
+              ),
+            ],
+            selectedItemColor: Color.fromARGB(255, 1, 37, 73)),
       ),
     );
   }
@@ -404,47 +403,48 @@ class HomeView extends GetView<Homecontroller> {
     ));
   }
 
- _selectedOption() {
-  return Padding(
-    padding: const EdgeInsets.only(top: 10),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Column(
-          children: [
-            Text(
-              "Main Course",
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-            Obx(() {
-              if (controller.lunchOptionId == 3) {
-                return Text(
-                  "No Lunch Option",
-                  style: TextStyle(fontSize: 14),
-                );
-              } else if (controller.lunchOptionId == 1) {
-                return Text(
-                  "Meals with chapati",
-                  style: TextStyle(fontSize: 14),
-                );
-              } else if (controller.lunchOptionId == 2) {
-                return Text(
-                  "Chapati only",
-                  style: TextStyle(fontSize: 14),
-                );
-              }else {
-                return Text(
-                  "No Lunch Option",
-                );
-              }
-            }),
-          ],
-        ),
-      ],
-    ),
-  );
+  _selectedOption() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Column(
+            children: [
+              Text(
+                "Main Course",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+              Obx(() {
+                if (controller.lunchOptionId == 3) {
+                  return Text(
+                    "No Lunch Option",
+                    style: TextStyle(fontSize: 14),
+                  );
+                } else if (controller.lunchOptionId == 1) {
+                  return Text(
+                    "Meals with chapati",
+                    style: TextStyle(fontSize: 14),
+                  );
+                } else if (controller.lunchOptionId == 2) {
+                  return Text(
+                    "Chapati only",
+                    style: TextStyle(fontSize: 14),
+                  );
+                } else {
+                  return Text(
+                    "No Lunch Option",
+                  );
+                }
+              }),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
-}
+
 class CustomBottomNavigationBar extends StatelessWidget {
   final RxInt _currentIndex = 1.obs;
 
@@ -463,11 +463,19 @@ class CustomBottomNavigationBar extends StatelessWidget {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: SvgPicture.asset(
+              'assets/homeIcon.svg',
+              width: 24,
+              height: 24,
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.request_page),
+            icon: SvgPicture.asset(
+              'assets/requestIcon.svg',
+              width: 24,
+              height: 24,
+            ),
             label: 'Requests',
           ),
         ],
