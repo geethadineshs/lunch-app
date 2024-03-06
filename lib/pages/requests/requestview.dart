@@ -16,47 +16,51 @@ class RequestView extends GetView<RequestViewController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: _appbar(),
+        backgroundColor: AppColors.backgroundColor,
         body: Center(
           child: Stack(
             children: [
               Positioned(
-                top: 250,
+                top: 260,
                 left: 0,
                 right: 0,
-                child: _video(),
+                child: SvgPicture.asset(
+                  'assets/requestPage.svg',
+                  // color: Cs.white,
+                ),
               ),
               Positioned(
                 top: 0,
                 left: 0,
                 right: 0,
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.45,
+                  height: MediaQuery.of(context).size.height * 0.39,
                   decoration: BoxDecoration(
-                    // color: Color.fromARGB(255, 229, 229, 243),
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.white.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
+                    color: AppColors.backgroundColor,
+                    borderRadius: BorderRadius.circular(4),
+                    // boxShadow: [
+                    // BoxShadow(
+                    // color: Colors.white,
+                    // spreadRadius: 5,
+                    // blurRadius: 7,
+                    // offset: Offset(0, 3),
+                    // ),
+                    // ],
                   ),
                   child: ListView(
                     children: [
-                      SizedBox(height: 50),
+                      SizedBox(height: 40),
                       RequestCard(
                         title: 'Leave Request',
                         formUrl:
                             'https://pm.agilecyber.co.uk/wkleaverequest/edit',
                       ),
-                      SizedBox(height: 5),
+                      SizedBox(height: 10),
                       RequestCard(
                         title: 'Permission Request',
                         formUrl: 'https://forms.office.com/r/66E26dwVFf',
                       ),
-                      SizedBox(height: 5),
+                      SizedBox(height: 10),
                       RequestCard(
                         title: 'Work from Home Request',
                         formUrl: 'https://forms.office.com/r/KH8HnMWPgp',
@@ -95,10 +99,11 @@ class RequestView extends GetView<RequestViewController> {
     return AppBar(
       title: Text(
         "Requests",
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: TextStyle(
+            fontWeight: FontWeight.bold, fontSize: 18, letterSpacing: 1),
       ),
       centerTitle: true,
-      backgroundColor: const Color.fromARGB(255, 34, 2, 74),
+      backgroundColor: AppColors.appBar,
       foregroundColor: AppColors.white,
       automaticallyImplyLeading: false,
     );
@@ -117,43 +122,44 @@ class RequestCard extends StatelessWidget {
     Widget leadingWidget;
     if (title == 'Leave Request') {
       leadingWidget = _iconavatar(
-        'assets/leave_request.svg',
+        'assets/leaveRequestIcon.svg',
       );
     } else if (title == 'Permission Request') {
       leadingWidget = _iconavatar(
-        'assets/permission_request.svg',
+        'assets/permissionRequestIcon.svg',
       );
     } else {
       leadingWidget = _iconavatar(
-        'assets/workfromhome_request.svg',
+        'assets/workfromhomeIcon.svg',
       );
     }
 
     return Padding(
-      padding: const EdgeInsets.only(right: 10.0, left: 10),
-      child: Container(
-        height: 70,
-        child: Card(
-          elevation: 3,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
-            side: BorderSide(
-              color: Color.fromARGB(255, 1, 37, 73),
-            ),
+      padding: const EdgeInsets.only(right: 15.0, left: 15),
+      child: GestureDetector(
+        onTap: () => _handleTap(context),
+        child: Container(
+          height: 55,
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            border: Border.all(color: AppColors.stroke),
+            borderRadius: BorderRadius.circular(4),
           ),
           child: Padding(
-            padding: const EdgeInsets.only(top: 2.5),
-            child: ListTile(
-              leading: leadingWidget,
-              title: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Color.fromARGB(255, 1, 37, 73),
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                leadingWidget,
+                SizedBox(width: 10),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              onTap: () => _handleTap(context),
+              ],
             ),
           ),
         ),
@@ -222,7 +228,7 @@ class RequestCard extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
-          backgroundColor: const Color.fromARGB(255, 34, 2, 74),
+          backgroundColor: AppColors.appBar,
           foregroundColor: AppColors.white,
         ),
         body: WebView(
@@ -248,14 +254,6 @@ class RequestCard extends StatelessWidget {
       height: 50,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color.fromARGB(255, 22, 26, 232),
-            Color.fromARGB(255, 34, 2, 74),
-          ],
-        ),
       ),
       child: Center(
         child: SvgPicture.asset(svgImagePath, height: 28, width: 28),

@@ -15,6 +15,7 @@ class MenuListView extends GetView<MenuListController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       appBar: _appbar(),
       body: Container(
         decoration: BoxDecoration(
@@ -288,16 +289,17 @@ class MenuListView extends GetView<MenuListController> {
     return AppBar(
       title: Text(
         "This Month",
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: TextStyle(
+            fontWeight: FontWeight.bold, fontSize: 18, letterSpacing: 1),
       ),
       centerTitle: true, // Center-align the title
-      backgroundColor: const Color.fromARGB(255, 34, 2, 74),
+      backgroundColor: AppColors.appBar,
       foregroundColor: AppColors.white,
 
       leading: IconButton(
         icon: Icon(Icons.arrow_back),
         onPressed: () async {
-          Get.offNamed(Appstring.home);
+          Get.offAllNamed(Appstring.home);
         },
       ),
     );

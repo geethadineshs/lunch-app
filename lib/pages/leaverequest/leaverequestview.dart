@@ -13,6 +13,7 @@ class LeaveRequestView extends GetView<LeaveRequestController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       appBar: _appbar(),
       body: _buildForm(context),
     );
@@ -23,10 +24,10 @@ class LeaveRequestView extends GetView<LeaveRequestController> {
       title: Text(
         "New Leave Request",
         style: TextStyle(
-            fontWeight: FontWeight.bold, fontSize: 14, letterSpacing: 1),
+            fontWeight: FontWeight.bold, fontSize: 18, letterSpacing: 1),
       ),
       centerTitle: true,
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.appBar,
       foregroundColor: AppColors.white,
     );
   }
@@ -35,29 +36,16 @@ class LeaveRequestView extends GetView<LeaveRequestController> {
     return Center(
       child: Container(
         width: MediaQuery.of(context).size.width * 0.95,
-        // height: MediaQuery.of(context).size.height * 0.8,
-        // decoration: BoxDecoration(
-        //   color: Color(0xFFCCCCFF),
-        //   borderRadius: BorderRadius.circular(10.0),
-        //   boxShadow: [
-        //     BoxShadow(
-        //       color: Colors.grey.withOpacity(0.5),
-        //       spreadRadius: 5,
-        //       blurRadius: 7,
-        //       offset: Offset(0, 3),
-        //     ),
-        //   ],
-        // ),
+        height: MediaQuery.of(context).size.height * 0.8,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(
-                top: 35, right: 10.0, left: 10, bottom: 10),
+            padding: const EdgeInsets.only(right: 10.0, left: 10, bottom: 10),
             child: Form(
               key: controller.formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                  // SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                   titleForm('Leave Type'),
                   _dropdown(),
                   titleForm('Start Date'),
@@ -97,10 +85,10 @@ class LeaveRequestView extends GetView<LeaveRequestController> {
 
   Widget _dropdown() {
     return Container(
-      height: 60,
+      height: 55,
       decoration: BoxDecoration(
         border: Border.all(
-          color: Color.fromARGB(255, 196, 195, 195),
+          color: AppColors.stroke,
         ),
         borderRadius: BorderRadius.circular(4),
         color: Colors.white,
@@ -110,10 +98,10 @@ class LeaveRequestView extends GetView<LeaveRequestController> {
           value: controller.selectedLeaveType.value,
           decoration: InputDecoration(
             border: InputBorder.none,
-            contentPadding: EdgeInsets.only(top: 20),
+            contentPadding: EdgeInsets.only(top: 14),
             prefixIcon: Padding(
               padding: const EdgeInsets.only(
-                  top: 15.0, right: 10, left: 20, bottom: 10),
+                  top: 10, right: 10, left: 20, bottom: 10),
               child: SvgPicture.asset(
                 'assets/clock.svg',
               ),
@@ -134,11 +122,23 @@ class LeaveRequestView extends GetView<LeaveRequestController> {
               ),
             );
           }).toList(),
-          hint: Text('Select Leave Type'),
+          hint: Text(
+            'Select Leave Type',
+            style: TextStyle(
+              fontSize: 16,
+              color: AppColors.stroke,
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+          style: TextStyle(
+              fontSize: 16,
+              color: AppColors.stroke,
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.normal),
           icon: Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: Icon(Icons.keyboard_arrow_down,
-                color: Color.fromARGB(255, 196, 195, 195)),
+            padding: const EdgeInsets.only(top: 2, right: 20.0),
+            child: Icon(Icons.keyboard_arrow_down, color: AppColors.stroke),
           ),
         ),
       ),
@@ -147,31 +147,39 @@ class LeaveRequestView extends GetView<LeaveRequestController> {
 
   Widget _comment() {
     return Container(
+      height: 65,
       child: Center(
         child: TextFormField(
+          // maxLength: 200,
           decoration: InputDecoration(
             hintText: 'Type your Reason',
+            hintStyle: TextStyle(
+                color: AppColors.stroke,
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.normal),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4),
-              borderSide: BorderSide(),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4),
-              borderSide: BorderSide(
-                color: Color.fromARGB(255, 196, 195, 195),
-              ),
+              borderSide: BorderSide(color: AppColors.stroke),
             ),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+              color: AppColors.appBar,
+            )),
             filled: true,
             fillColor: Colors.white,
             prefixIcon: Padding(
-              padding: const EdgeInsets.only(right: 10, left: 20, bottom: 10),
+              padding: const EdgeInsets.only(
+                  top: 10.0, right: 10, left: 20, bottom: 5),
               child: SvgPicture.asset(
                 'assets/message.svg',
               ),
             ),
           ),
           controller: controller.commentController,
-          maxLines: 2,
+          // maxLines: 4,
         ),
       ),
     );
@@ -185,6 +193,24 @@ class LeaveRequestView extends GetView<LeaveRequestController> {
           initialDate: DateTime.now(),
           firstDate: DateTime.now(),
           lastDate: DateTime(2101),
+          builder: (BuildContext context, Widget? child) {
+            return Theme(
+              data: ThemeData.light().copyWith(
+                colorScheme: ColorScheme.light().copyWith(
+                  primary: AppColors.appBar,
+                  onPrimary: AppColors.white,
+                  surface: AppColors.backgroundColorDatePicker,
+                  background: AppColors.appBar,
+                ),
+                textButtonTheme: TextButtonThemeData(
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.appBar,
+                  ),
+                ),
+              ),
+              child: child!,
+            );
+          },
         );
         if (pickedDate != null) {
           controller.endDateController.text =
@@ -200,15 +226,18 @@ class LeaveRequestView extends GetView<LeaveRequestController> {
       child: AbsorbPointer(
         child: TextFormField(
           decoration: InputDecoration(
+            hintStyle: TextStyle(
+                color: AppColors.stroke,
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.normal),
             hintText: 'Select end date',
+            contentPadding: EdgeInsets.only(top: 15, bottom: 15),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4),
-              borderSide: BorderSide(
-                color: Color.fromARGB(255, 196, 195, 195),
-              ),
+              borderSide: BorderSide(color: AppColors.stroke),
             ),
             filled: true,
             fillColor: Colors.white,
@@ -240,6 +269,24 @@ class LeaveRequestView extends GetView<LeaveRequestController> {
           initialDate: DateTime.now(),
           firstDate: DateTime.now(),
           lastDate: DateTime(2101),
+          builder: (BuildContext context, Widget? child) {
+            return Theme(
+              data: ThemeData.light().copyWith(
+                colorScheme: ColorScheme.light().copyWith(
+                  primary: AppColors.appBar,
+                  onPrimary: AppColors.white,
+                  surface: AppColors.backgroundColorDatePicker,
+                  background: AppColors.appBar,
+                ),
+                textButtonTheme: TextButtonThemeData(
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.appBar,
+                  ),
+                ),
+              ),
+              child: child!,
+            );
+          },
         );
         if (pickedDate != null) {
           controller.startDateController.text =
@@ -256,14 +303,17 @@ class LeaveRequestView extends GetView<LeaveRequestController> {
         child: TextFormField(
           decoration: InputDecoration(
             hintText: 'Select start date',
+            hintStyle: TextStyle(
+                color: AppColors.stroke,
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.normal),
+            contentPadding: EdgeInsets.only(top: 15, bottom: 15),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4),
-              borderSide: BorderSide(
-                color: Color.fromARGB(255, 196, 195, 195),
-              ),
+              borderSide: BorderSide(color: AppColors.stroke),
             ),
             filled: true,
             fillColor: Colors.white,
@@ -288,26 +338,29 @@ class LeaveRequestView extends GetView<LeaveRequestController> {
   }
 
   Widget _submit() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.black,
-        foregroundColor: AppColors.white,
-        minimumSize: Size(double.infinity, 60),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-          // borderSide: BorderSide(color: Colors.grey, width: 2),
+    return Container(
+      height: 50,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.button,
+          foregroundColor: AppColors.white,
+          minimumSize: Size(double.infinity, 60),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+            // borderSide: BorderSide(color: Colors.grey, width: 2),
+          ),
         ),
+        onPressed: () {
+          Map<String, dynamic> requestBody = {
+            "start_date": controller.startDateController.text,
+            "end_date": controller.endDateController.text,
+            "leave_reasons": controller.commentController.text,
+            "leave_type_id": controller.selectedLeaveType.value,
+          };
+          controller.submitLeaveRequest(requestBody);
+        },
+        child: Text('Submit'),
       ),
-      onPressed: () {
-        Map<String, dynamic> requestBody = {
-          "start_date": controller.startDateController.text,
-          "end_date": controller.endDateController.text,
-          "leave_reasons": controller.commentController.text,
-          "leave_type_id": controller.selectedLeaveType.value,
-        };
-        controller.submitLeaveRequest(requestBody);
-      },
-      child: Text('Submit'),
     );
   }
 }

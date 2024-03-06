@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:test_app/const/Appcolor.dart';
 import 'package:test_app/pages/splash/splashcontroller.dart';
 
 class Splashview extends GetView<SplashController> {
@@ -11,13 +12,13 @@ class Splashview extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //  backgroundColor: Colors.white
+      backgroundColor: AppColors.backgroundColor,
       body: Center(
-          child: Container(
+        child: Container(
           child: SvgPicture.asset(
             'assets/acs_logo.svg',
-             placeholderBuilder: (BuildContext context) => Container(
-                child: const CircularProgressIndicator()),
+            placeholderBuilder: (BuildContext context) =>
+                Container(child: const CircularProgressIndicator()),
           ),
         ),
       ),

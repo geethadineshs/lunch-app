@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:test_app/pages/MenuList/menulistview.dart';
@@ -17,6 +18,7 @@ class HomeView extends GetView<Homecontroller> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       appBar: _appbar(),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -55,15 +57,25 @@ class HomeView extends GetView<Homecontroller> {
             },
             items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
+                icon: SvgPicture.asset(
+                  'assets/homeIcon.svg',
+                  color: AppColors.appBar,
+                  width: 24,
+                  height: 24,
+                ),
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.request_page),
+                icon: SvgPicture.asset(
+                  'assets/requestIcon.svg',
+                  width: 24,
+                  height: 24,
+                  color: Colors.grey,
+                ),
                 label: 'Requests',
               ),
             ],
-            selectedItemColor: Color.fromARGB(255, 1, 37, 73)),
+            selectedItemColor: AppColors.appBar),
       ),
     );
   }
@@ -113,38 +125,17 @@ class HomeView extends GetView<Homecontroller> {
       },
       label: Text("Book Lunch"),
       icon: Icon(Icons.food_bank_outlined),
-      backgroundColor: Color.fromARGB(255, 34, 2, 74),
+      backgroundColor: AppColors.appBar,
       foregroundColor: AppColors.white,
     );
   }
 
-  // _floatting() {
-  //   return FloatingActionButton.extended(
-  //     onPressed: () {
-  //   Get.to(() => MenuListView());
-  // },
-  //     label: Text("Lunch List"),
-  //     icon: Icon(Icons.food_bank_outlined),
-  //     backgroundColor: Color.fromARGB(255, 34, 2, 74),
-
-  //   );
-  // }
-
-  _floattingcancell() {
-    return FloatingActionButton.extended(
-      onPressed: () {
-        controller.cancel();
-      },
-      label: Text("Cancel Lunch"),
-      icon: Icon(Icons.cancel_rounded),
-      backgroundColor: AppColors.siteBlue,
-    );
-  }
 
   _appbar() {
     print(controller.name);
     return AppBar(
-      backgroundColor: Color.fromARGB(255, 34, 2, 74),
+      centerTitle: true,
+      backgroundColor: AppColors.appBar,
       title: Obx(() => Text(
             "Hi ${controller.name} ${controller.lastname}",
             style: TextStyle(
@@ -154,13 +145,7 @@ class HomeView extends GetView<Homecontroller> {
                 fontFamily: 'Roboto'),
           )),
       actions: [
-        // IconButton(
-        //   tooltip: 'Delete',
-        //   onPressed: () {
-        //     Get.to(() => MenuListView());
-        //   },
-        //    icon: Icon(Icons.delete),
-        //   ),
+
         IconButton(
           color: AppColors.white,
           tooltip: 'Logout',
@@ -171,15 +156,15 @@ class HomeView extends GetView<Homecontroller> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Get.offNamed(Appstring.login);
+                    controller.logout();
+                    Get.offAllNamed(Appstring.login);
                   },
                   child: Text("Logout"),
                 ),
                 TextButton(
                   onPressed: () {
-                    controller.logout();
-                    Get.offNamed(Appstring.login);
-                    Get.back(); // Close the dialog after logout
+                    // Get.offAllNamed(Appstring.login);
+                    Get.back();
                   },
                   child: Text("Cancel"),
                 ),
@@ -200,6 +185,9 @@ class HomeView extends GetView<Homecontroller> {
     return SingleChildScrollView(
         child: Column(
       children: [
+        SizedBox(
+          height: 10,
+        ),
         _prevsinfo(context),
         _monthinfo(context),
         _empty(),
@@ -209,25 +197,26 @@ class HomeView extends GetView<Homecontroller> {
   }
 
   _prevsinfo(context) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(20),
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-              bottomLeft: Radius.circular(20)),
-          side: BorderSide(width: 1, color: AppColors.grey)),
-      child: Column(
-        children: [
-          _prevcardfirstchild(),
-          _prevCardSecondChild(),
-          Container(
-            height: 20,
-          )
-        ],
-      ),
-    );
+    return Padding(
+        padding: const EdgeInsets.all(15),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            border: Border.all(
+              color: AppColors.stroke,
+            ),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Column(
+            children: [
+              _prevcardfirstchild(),
+              _prevCardSecondChild(),
+              Container(
+                height: 10,
+              )
+            ],
+          ),
+        ));
   }
 
   _monthinfo(context) {
@@ -235,23 +224,25 @@ class HomeView extends GetView<Homecontroller> {
       onTap: () {
         Get.to(() => MenuListView());
       },
-      child: Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(20),
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-                bottomLeft: Radius.circular(20)),
-            side: BorderSide(width: 1, color: AppColors.grey)),
-        child: Column(
-          children: [
-            _cardfirstchild(),
-            _cardsecoundchild(),
-            Container(
-              height: 20,
-            )
-          ],
+      child: Padding(
+        padding: const EdgeInsets.only(right: 15, left: 15),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            border: Border.all(
+              color: AppColors.stroke,
+            ),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Column(
+            children: [
+              _cardfirstchild(),
+              _cardsecoundchild(),
+              SizedBox(
+                height: 10,
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -259,22 +250,32 @@ class HomeView extends GetView<Homecontroller> {
 
   _cardfirstchild() {
     return Center(
-        child: Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Obx(
-        () => Text(
-          controller.month.value.toString(),
-          style: TextStyle(
-              color: Color.fromARGB(255, 1, 37, 73),
-              fontWeight: FontWeight.w600),
+        child: Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 12.0, bottom: 5),
+          child: SvgPicture.asset('assets/calendar.svg', height: 28, width: 28),
         ),
-      ),
+        Obx(
+          () => Container(
+            child: Text(
+              controller.month.value.toString(),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+            ),
+          ),
+        ),
+        Divider(
+          color: AppColors.stroke,
+          thickness: 1.0,
+        ),
+      ],
     ));
   }
 
   _cardsecoundchild() {
     return Padding(
-      padding: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(top: 5, bottom: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -310,21 +311,28 @@ class HomeView extends GetView<Homecontroller> {
 
   _prevcardfirstchild() {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: Obx(() => Text(
+        child: Column(children: [
+      Padding(
+        padding: const EdgeInsets.only(top: 12.0, bottom: 5),
+        child: SvgPicture.asset('assets/calendar.svg', height: 28, width: 28),
+      ),
+      Obx(() => Container(
+            child: Text(
               controller.prev_month.value.toString(),
               style: TextStyle(
-                  color: Color.fromARGB(255, 1, 34, 68),
-                  fontWeight: FontWeight.w600),
-            )),
+                  color: AppColors.black, fontWeight: FontWeight.w600),
+            ),
+          )),
+      Divider(
+        color: AppColors.stroke,
+        thickness: 1.0,
       ),
-    );
+    ]));
   }
 
   _prevCardSecondChild() {
     return Padding(
-      padding: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(top: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -360,85 +368,104 @@ class HomeView extends GetView<Homecontroller> {
 
   _empty() {
     return Container(
-      height: 50,
+      height: 10,
     );
   }
 
   _todayBooking() {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(20),
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-              bottomLeft: Radius.circular(20)),
-          side: BorderSide(width: 1, color: AppColors.grey)),
-      child: Column(
-        children: [
-          _todayDate(),
-          _selectedOption(),
-          Container(
-            height: 20,
-          )
-        ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 6, left: 15, right: 15),
+      child: Container(
+        // height:70,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          border: Border.all(
+            color: AppColors.stroke,
+          ),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Column(
+          children: [
+            Container(
+              height: 10,
+            ),
+            _todayDate(),
+            _selectedOption(),
+            Container(
+              height: 10,
+            )
+          ],
+        ),
       ),
     );
   }
 
   _todayDate() {
     return Center(
-        child: Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Text(
-        "Bookings on " +
-            DateTime.now().day.toString() +
-            "-" +
-            DateTime.now().month.toString() +
-            "-" +
-            DateTime.now().year.toString(),
-        style: TextStyle(
-            color: Color.fromARGB(255, 1, 36, 70), fontWeight: FontWeight.w600),
-      ),
+        child: Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 5.0, bottom: 5),
+          child: SvgPicture.asset('assets/calendar.svg', height: 24, width: 24),
+        ),
+        Text(
+          "Bookings on " +
+              DateTime.now().day.toString() +
+              "-" +
+              DateTime.now().month.toString() +
+              "-" +
+              DateTime.now().year.toString(),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+        ),
+        Divider(
+          color: AppColors.stroke,
+          thickness: 1.0,
+        ),
+      ],
     ));
   }
 
   _selectedOption() {
     return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      padding: const EdgeInsets.only(top: 5, bottom: 5),
+      child: Column(
         children: [
-          Column(
-            children: [
-              Text(
-                "Main Course",
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-              Obx(() {
-                if (controller.lunchOptionId == 3) {
-                  return Text(
-                    "No Lunch Option",
-                    style: TextStyle(fontSize: 14),
-                  );
-                } else if (controller.lunchOptionId == 1) {
-                  return Text(
-                    "Meals with chapati",
-                    style: TextStyle(fontSize: 14),
-                  );
-                } else if (controller.lunchOptionId == 2) {
-                  return Text(
-                    "Chapati only",
-                    style: TextStyle(fontSize: 14),
-                  );
-                } else {
-                  return Text(
-                    "No Lunch Option",
-                  );
-                }
-              }),
-            ],
+          Text(
+            "Main Course",
+            style: TextStyle(fontWeight: FontWeight.w600),
           ),
+          SizedBox(
+            height: 5,
+          ),
+          Divider(
+            color: AppColors.stroke,
+            thickness: 1,
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Obx(() {
+            if (controller.lunchOptionId == 3) {
+              return Text(
+                "No Lunch Option",
+                style: TextStyle(fontSize: 14),
+              );
+            } else if (controller.lunchOptionId == 1) {
+              return Text(
+                "Meals with chapati",
+                style: TextStyle(fontSize: 14),
+              );
+            } else if (controller.lunchOptionId == 2) {
+              return Text(
+                "Chapati only",
+                style: TextStyle(fontSize: 14),
+              );
+            } else {
+              return Text(
+                "No Lunch Option",
+              );
+            }
+          }),
         ],
       ),
     );
@@ -461,12 +488,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
             Get.offNamed('/home');
           }
         },
+
         items: [
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               'assets/homeIcon.svg',
               width: 24,
               height: 24,
+              color: Colors.grey,
             ),
             label: 'Home',
           ),
@@ -475,11 +504,12 @@ class CustomBottomNavigationBar extends StatelessWidget {
               'assets/requestIcon.svg',
               width: 24,
               height: 24,
+              color: AppColors.appBar,
             ),
             label: 'Requests',
           ),
         ],
-        selectedItemColor: Color.fromARGB(255, 1, 37, 73),
+        selectedItemColor: AppColors.appBar,
       ),
     );
   }

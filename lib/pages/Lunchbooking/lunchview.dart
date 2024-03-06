@@ -15,19 +15,10 @@ class LunchView extends GetView<LunchController> {
   LunchView({Key? key}) : super(key: key) {
     controller.init();
   }
-// DateTime? selectedStartDate;
-// DateTime? selectedEndDate;
-  // String dropdownvalue = 'Meals with One Chapati';
-
-  // // List of items in our dropdown menu
-  // var items = [
-  //   "Meals with One Chapati",
-  //   'Chapathi only',
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return Obx(() => Scaffold(
+          backgroundColor: AppColors.backgroundColor,
           appBar: _appbar(),
           body: !controller.isbooked.value
               ? _body(context)
@@ -40,14 +31,19 @@ class LunchView extends GetView<LunchController> {
 
   _appbar() {
     return AppBar(
-      title: Text("Book Lunch"),
-      backgroundColor: Color.fromARGB(255, 34, 2, 74),
+      title: Text(
+        "Book Lunch",
+        style: TextStyle(
+            fontWeight: FontWeight.bold, fontSize: 18, letterSpacing: 1),
+      ),
+      centerTitle: true,
+      backgroundColor: AppColors.appBar,
       foregroundColor: AppColors.white,
       actions: [
         IconButton(
             color: AppColors.white,
             onPressed: () {
-              Get.offNamed(Appstring.home);
+              Get.offAllNamed(Appstring.home);
             },
             icon: Icon(Icons.home))
       ],
@@ -62,160 +58,70 @@ class LunchView extends GetView<LunchController> {
           _dropdown(),
           _mainmanu1(context),
           _dropdown1(),
-          Padding(padding: const EdgeInsets.all(20.0)),
-
-          SfDateRangePicker(
-            selectionMode: DateRangePickerSelectionMode.range,
-            selectableDayPredicate: (DateTime date) {
-              // Allow selection of all dates except Saturdays and Sundays
-              return date.weekday != DateTime.saturday &&
-                  date.weekday != DateTime.sunday;
-            },
-            minDate: DateTime.now(),
-            initialSelectedDate: null,
-            onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-              selectedDates.clear(); // Clear the list before adding new dates
-              DateTime now = DateTime.now();
-              int selectedDays =
-                  args.value.endDate.difference(args.value.startDate).inDays +
+          Padding(
+            padding: const EdgeInsets.only(top: 20, right: 19.0, left: 15),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                border: Border.all(
+                  color: AppColors.stroke,
+                  width: 1.0,
+                ),
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              child: SfDateRangePicker(
+                selectionMode: DateRangePickerSelectionMode.range,
+                selectableDayPredicate: (DateTime date) {
+                  return date.weekday != DateTime.saturday &&
+                      date.weekday != DateTime.sunday;
+                },
+                minDate: DateTime.now(),
+                initialSelectedDate: null,
+                onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+                  selectedDates.clear();
+                  DateTime now = DateTime.now();
+                  int selectedDays = args.value.endDate
+                          .difference(args.value.startDate)
+                          .inDays +
                       1;
 
-              if (selectedDays > 16) {
-                // Show a Snackbar if more than 15 days are selected
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Please choose only 16 days.'),
-                    backgroundColor: const Color.fromARGB(255, 34, 2, 74),
-                  ),
-                );
+                  if (selectedDays > 16) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Please choose only 16 days.'),
+                        backgroundColor: AppColors.appBar,
+                      ),
+                    );
 
-                // Reset the selection to the last 15 days
-                args.value.startDate =
-                    args.value.endDate.subtract(Duration(days: 15));
-              }
+                    args.value.startDate =
+                        args.value.endDate.subtract(Duration(days: 15));
+                  }
 
-              for (int i = args.value.startDate.day;
-                  i <= args.value.endDate.day;
-                  i++) {
-                DateTime selectedDate = DateTime(
-                    args.value.startDate.year, args.value.startDate.month, i);
-                // Check if it's not Saturday or Sunday before adding
-                if (selectedDate.weekday != DateTime.saturday &&
-                    selectedDate.weekday != DateTime.sunday) {
-                  selectedDates.add(selectedDate);
-                }
-              }
+                  for (int i = args.value.startDate.day;
+                      i <= args.value.endDate.day;
+                      i++) {
+                    DateTime selectedDate = DateTime(args.value.startDate.year,
+                        args.value.startDate.month, i);
+                    if (selectedDate.weekday != DateTime.saturday &&
+                        selectedDate.weekday != DateTime.sunday) {
+                      selectedDates.add(selectedDate);
+                    }
+                  }
 
-              selectedDateStrings = selectedDates
-                  .map((date) => date.toString().split(' ')[0])
-                  .toList();
-              print(selectedDateStrings);
-            },
-            selectionColor: const Color.fromARGB(255, 4, 69, 122),
-            rangeSelectionColor:
-                const Color.fromARGB(255, 4, 69, 122).withOpacity(0.3),
+                  selectedDateStrings = selectedDates
+                      .map((date) => date.toString().split(' ')[0])
+                      .toList();
+                  print(selectedDateStrings);
+                },
+                selectionColor: AppColors.appBar,
+                rangeSelectionColor: AppColors.stroke,
+                backgroundColor: Colors.white,
+                todayHighlightColor: AppColors.appBar,
+                endRangeSelectionColor: AppColors.appBar,
+                startRangeSelectionColor: AppColors.appBar,
+              ),
+            ),
           )
-
-          // if (pickedStartDate != null) {
-          //   DateTime pickedEndDate = pickedStartDate.add(Duration(days: 14));
-          //   controller.startdate.value.text =
-          //       DateFormat('yyyy-MM-dd').format(pickedStartDate);
-          //   print("Selected Start Date: ${controller.startdate.value.text}");
-          //   controller.enddate.value.text =
-          //       DateFormat('yyyy-MM-dd').format(pickedEndDate);
-          //   print("Selected End Date: ${controller.enddate.value.text}");
-          // }
-
-// Padding(padding: const EdgeInsets.all(20.0)),
-// Obx(
-//   () => TextField(
-//     controller: controller.enddate.value,
-//     decoration: const InputDecoration(
-//       icon: Icon(Icons.calendar_today_rounded),
-//       labelText: "End Date",
-//     ),
-//     onTap: () async {
-//       DateTime? pickedEndDate = await showDatePicker(
-//         context: context,
-//         initialDate: DateTime.now(),
-//         firstDate: DateTime(2000),
-//         lastDate: DateTime(2101),
-//         selectableDayPredicate: (DateTime date) {
-//           // Disable Saturday (day 6) and Sunday (day 7)
-//           return date.weekday != 6 && date.weekday != 7;
-
-//         },
-//       );
-
-// if (pickedEndDate != null) {
-//         DateTime pickedStartDate = DateTime.now();
-//         if (pickedStartDate.isBefore(pickedEndDate)) {
-//           Duration difference = pickedEndDate.difference(pickedStartDate);
-//           if (difference.inDays == 14) {
-//             controller.enddate.value.text =
-//                 DateFormat('yyyy-MM-dd').format(pickedEndDate);
-//             print("Selected End Date: ${controller.enddate.value.text}");
-//           } else {
-//             // Show an error message if the date difference is not 15 days
-//             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-//               content: Text("Please choose a date range of exactly 15 days."),
-//             ));
-//           }
-//         } else {
-//           // Show an error message if the end date is before the start date
-//           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-//             content: Text("End date must be after the start date."),
-//           ));
-//         }
-//       }
-//     },
-//   ),
-// )
-
-          // ListView.builder(itemBuilder: (context, index)
-          // {
-
-          // }),
-          // ListTile(
-          //     leading: Icon(Icons.rice_bowl_sharp),
-          //     title: Obx(() => Text(controller.mainiteams[0].toString())),
-          //     trailing: Obx(() => Radio(
-          //           value: "riceandchapati",
-          //           groupValue: controller.selected.value,
-          //           onChanged: ((value) {
-          //             controller.selected.value = value.toString();
-          //           }),
-          //         ))),
-          // ListTile(
-          //     leading: Icon(Icons.circle),
-          //     title: Obx(() => Text(controller.mainiteams[1].toString())),
-          //     trailing: Obx(() => Radio(
-          //           value: "ricewithchapathi",
-          //           groupValue: controller.selected.value,
-          //           onChanged: ((value) {
-          //             controller.selected.value = value.toString();
-          //           }),
-          //         ))),
-
-          //   Container(
-          //       width: MediaQuery.of(context).size.width,
-          //       height: MediaQuery.of(context).size.height * 0.3,
-          //       child: Obx(() => ListView.builder(
-          //             itemCount: controller.extraiteam.length,
-          //             itemBuilder: (context, index) {
-          //               return ListTile(
-          //                   leading: Icon(Icons.circle),
-          //                   title: Obx(() =>
-          //                       Text(controller.extraiteam[index].toString())),
-          //                   trailing: Obx(() => Radio(
-          //                         value: controller.extraiteam[index].toString(),
-          //                         groupValue: controller.selected.value,
-          //                         onChanged: ((value) {
-          //                           controller.selected.value = value.toString();
-          //                         }),
-          //                       )));
-          //             },
-          //           ))),
         ],
       ),
     );
@@ -223,10 +129,10 @@ class LunchView extends GetView<LunchController> {
 
   Widget _mainmanu1(context) {
     return SizedBox(
-      height: 30,
+      height: 35,
       width: MediaQuery.of(context).size.width,
       child: Padding(
-        padding: const EdgeInsets.only(left: 30, right: 30, top: 5),
+        padding: const EdgeInsets.only(left: 15, right: 0, top: 10, bottom: 0),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Text(
@@ -240,38 +146,50 @@ class LunchView extends GetView<LunchController> {
 
   _dropdown() {
     return Padding(
-      padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
+      padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
       child: Obx(
         () => Container(
-          height: 50, // Adjust the height as needed
+          height: 50,
           decoration: BoxDecoration(
+            color: AppColors.white,
             border: Border.all(
-              color: const Color.fromARGB(255, 4, 69, 122),
+              color: AppColors.stroke,
             ),
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(4.0),
           ),
-          child: DropdownButtonFormField(
-            decoration: InputDecoration(
-              border: InputBorder.none, // Remove the default underline
-            ),
-            items: [
-              for (var data in controller.mainiteams.value)
-                DropdownMenuItem(
-                  child: Text(data),
-                  value: data,
-                ),
-            ],
-            onChanged: (value) => controller.selected.value = value as String,
-            hint: Padding(
-              padding: const EdgeInsets.only(
-                  left: 8), // Adjust the left padding as needed
-              child: Text(
-                'Select your dish',
-                style: TextStyle(
-                    color: Colors.grey), // Customize the style if needed
+          child: Padding(
+            padding: const EdgeInsets.only(left: 3.0),
+            child: DropdownButtonFormField(
+              decoration: InputDecoration(
+                border: InputBorder.none,
               ),
+              items: [
+                for (var data in controller.mainiteams.value)
+                  DropdownMenuItem(
+                    child: Text(data),
+                    value: data,
+                  ),
+              ],
+              onChanged: (value) => controller.selected.value = value as String,
+              style: TextStyle(color: AppColors.black),
+              hint: Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Text(
+                  'Select your dish',
+                  style: TextStyle(
+                    color: AppColors.stroke,
+                    fontSize: 16,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ),
+              icon: Padding(
+                padding: const EdgeInsets.only(top: 2, right: 15.0),
+                child: Icon(Icons.keyboard_arrow_down, color: AppColors.stroke),
+              ),
+              alignment: Alignment.centerLeft,
             ),
-            alignment: Alignment.centerLeft, // Align the text to the center
           ),
         ),
       ),
@@ -280,14 +198,16 @@ class LunchView extends GetView<LunchController> {
 
   _dropdown1() {
     return Padding(
-      padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
+      padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
       child: Obx(
         () => Container(
+          // height: 90,
           decoration: BoxDecoration(
+            color: AppColors.white,
             border: Border.all(
-              color: const Color.fromARGB(255, 4, 69, 122),
+              color: AppColors.stroke,
             ),
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(4),
           ),
           child: MultiSelectDialogField(
             items: controller.extraiteam.value
@@ -307,19 +227,25 @@ class LunchView extends GetView<LunchController> {
                 print('Selected Values: $selectedValues');
               }
             },
-            searchable: false, // Set to true if you want a searchable dropdown
+            searchable: false,
             buttonText: Text(
               'Select your preferences',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-              // Adjust the font size as needed
-            ), // Placeholder text
-            selectedItemsTextStyle: TextStyle(),
+              style: TextStyle(fontSize: 16, color: AppColors.stroke),
+            ),
+            selectedItemsTextStyle: TextStyle(
+                backgroundColor: AppColors.white, color: AppColors.white),
+            backgroundColor: AppColors.backgroundColor,
+            checkColor: Colors.red,
+            selectedColor: AppColors.appBar,
+            unselectedColor: AppColors.stroke,
             decoration: BoxDecoration(
               border: Border.all(
                 color: Colors.transparent,
               ),
               borderRadius: BorderRadius.circular(8.0),
             ),
+            buttonIcon:
+                Icon(Icons.keyboard_arrow_down, color: AppColors.stroke),
           ),
         ),
       ),
@@ -328,8 +254,6 @@ class LunchView extends GetView<LunchController> {
 
   List<DateTime> selectedDates = [];
   var selectedDateStrings;
-  // var getTodaLunch;
-  // var showDateAlreadyBookedAlert;
   bool isToday(String dateString) {
     var selectedDate = DateTime.parse(dateString);
     var today = DateTime.now();
@@ -339,24 +263,19 @@ class LunchView extends GetView<LunchController> {
   }
 
   Widget floatingbutton(BuildContext context) {
-    // Access deletedEntries from MenuListController
     List<Map<String, dynamic>> deletedEntries =
         MenuListController().deletedEntries;
 
-    return FloatingActionButton.extended(
+    return ElevatedButton(
+      child: Text("Book Lunch"),
       onPressed: () async {
-        // If no date is selected, set today's date as default
         if (selectedDateStrings.isEmpty) {
           selectedDateStrings = [DateTime.now().toString().split(' ')[0]];
         }
-
-        // Check if the selected date is in deletedEntries
         if (isDateInDeletedEntries(selectedDateStrings, deletedEntries)) {
           showDeletedEntryAlert(context);
-          return; // Return early if the date is in deletedEntries
+          return;
         }
-
-        // If the dish is not selected, show a snack bar
         if (controller.selected.value.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -364,36 +283,30 @@ class LunchView extends GetView<LunchController> {
                 'Please select your dish.',
                 style: TextStyle(color: Colors.white, fontSize: 16.0),
               ),
-              backgroundColor: Color.fromARGB(255, 34, 2, 74),
+              backgroundColor: AppColors.appBar,
             ),
           );
-          return; // Return early if the dish is not selected
+          return;
         }
 
-        // Check if the date is already booked
         var dateBookingResponse = await controller.getTodaLunch(context);
 
         if (dateBookingResponse.containsKey('error')) {
-          // Date is already booked, show an alert only if it's today
           if (isToday(selectedDateStrings[0])) {
             showDateAlreadyBookedAlert(context);
           }
         } else {
-          // Date is not booked, proceed with booking
           var isDateAlreadyBooked = dateBookingResponse['isDateAlreadyBooked'];
 
           if (isToday(selectedDateStrings[0]) && isDateAlreadyBooked) {
-            // Date is today and already booked, show an alert
             showDateAlreadyBookedAlert(context);
           } else {
-            // Date is not booked or not today, proceed with booking
             var lunchBookingResponse =
                 await controller.booklunch(selectedDateStrings, deletedEntries);
 
             if (lunchBookingResponse == 200) {
               Get.offAllNamed(Appstring.home);
             } else if (lunchBookingResponse == 409) {
-              // Conflict status (e.g., entry is already deleted)
               showDeletedEntryAlert(context);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -402,17 +315,22 @@ class LunchView extends GetView<LunchController> {
                     'Failed to book lunch. Please try again.',
                     style: TextStyle(color: Colors.white, fontSize: 16.0),
                   ),
-                  backgroundColor: Color.fromARGB(255, 34, 2, 74),
+                  backgroundColor: AppColors.appBar,
                 ),
               );
             }
           }
         }
       },
-      label: Text("Book Lunch"),
-      icon: Icon(Icons.breakfast_dining),
-      backgroundColor: const Color.fromARGB(255, 34, 2, 74),
-      foregroundColor: Colors.white,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.button,
+        foregroundColor: AppColors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4.0),
+        ),
+        minimumSize: Size(MediaQuery.of(context).size.width * 0.9,
+            MediaQuery.of(context).size.height * 0.075),
+      ),
     );
   }
 
@@ -448,7 +366,6 @@ class LunchView extends GetView<LunchController> {
   }
 
   void showDateAlreadyBookedAlert(BuildContext context) {
-    // Example: Show an alert dialog to inform the user that the date is already booked
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -458,7 +375,6 @@ class LunchView extends GetView<LunchController> {
           actions: [
             TextButton(
               onPressed: () {
-                // Close the dialog
                 Navigator.pop(context);
               },
               child: Text('OK'),
@@ -471,10 +387,10 @@ class LunchView extends GetView<LunchController> {
 
   Widget _mainmanu(BuildContext context) {
     return SizedBox(
-      height: 30,
+      height: 45,
       width: MediaQuery.of(context).size.width,
       child: Padding(
-        padding: const EdgeInsets.only(left: 30, right: 30, top: 5),
+        padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 5),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Text(
@@ -500,7 +416,7 @@ class LunchView extends GetView<LunchController> {
   _bookedpage(context) {
     return Center(
       child: Container(
-        color: const Color.fromARGB(255, 5, 57, 147),
+        color: AppColors.appBar,
         alignment: Alignment.center,
         child: Text(
           "You have booked you meals",
@@ -510,23 +426,6 @@ class LunchView extends GetView<LunchController> {
         height: 150,
         width: MediaQuery.of(context).size.width * 0.9,
       ),
-    );
-  }
-
-  //   items: list.map<DropdownMenuItem<String>>((String value) {
-  //     return DropdownMenuItem<String>(
-  //       value: value,
-  //       child: Text(value),
-  //     );
-  //   }).toList(),
-  // );
-  _Homefloattingbutton() {
-    return FloatingActionButton.extended(
-      onPressed: () {
-        Get.toNamed(Appstring.home);
-      },
-      label: Text("Back Home"),
-      icon: Icon(Icons.home),
     );
   }
 }

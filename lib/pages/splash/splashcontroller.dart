@@ -23,7 +23,7 @@ class SplashController extends GetxController {
       'Scheduled Title',
       'Scheduled Body',
       tz.TZDateTime(tz.local, DateTime.now().year, DateTime.now().month,
-          DateTime.now().day, 12, 23),
+          DateTime.now().day, 5, 30),
       platformChannelSpecifics,
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
