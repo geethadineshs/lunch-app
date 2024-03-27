@@ -3,17 +3,19 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:get/get_navigation/get_navigation.dart';
+// import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_app/const/stringconst.dart';
 import 'package:test_app/pages/MenuList/menulistcontroller.dart';
 import 'package:get/get.dart';
 
 import 'package:test_app/const/routeconst.dart';
+import 'package:test_app/pages/listLeaveRequest/listRequestController.dart';
 import 'package:test_app/services/notifi_service.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+
+import 'pages/requests/requestcontroller.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -27,9 +29,11 @@ const NotificationDetails platformChannelSpecifics =
     NotificationDetails(android: androidPlatformChannelSpecifics);
 Future<void> main() async {
   Get.put(MenuListController());
+  Get.put(LeaveRequestListController());
+  Get.put(RequestViewController());
 
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   tz.initializeTimeZones();
 
 //  final InitializationSettings initializationSettings = InitializationSettings(
@@ -70,7 +74,7 @@ Future<void> main() async {
     }
   });
 
-  FlutterNativeSplash.remove();
+  // FlutterNativeSplash.remove();
   await scheduleNotification();
 }
 
@@ -82,6 +86,7 @@ Future<void> scheduleNotification() async {
     tz.TZDateTime(tz.local, DateTime.now().year, DateTime.now().month,
         DateTime.now().day, 5, 30),
     platformChannelSpecifics,
+    // ignore: deprecated_member_use
     androidAllowWhileIdle: true,
     uiLocalNotificationDateInterpretation:
         UILocalNotificationDateInterpretation.absoluteTime,

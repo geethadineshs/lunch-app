@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:test_app/const/Appcolor.dart';
 import 'package:test_app/pages/login/logincontroller.dart';
 
+import '../../const/stringconst.dart';
+
 class LogininView extends GetView<LoginController> {
   LogininView({Key? key}) : super(key: key);
   final formkey = GlobalKey<FormState>();
@@ -113,7 +115,7 @@ class LogininView extends GetView<LoginController> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(6.0),
               ),
-              labelText: "Username",
+              labelText: Appstring.username,
               contentPadding: EdgeInsets.fromLTRB(15.0, 24.0, 15.0, 2.0),
               labelStyle: TextStyle(
                 color: AppColors.stroke,
@@ -166,7 +168,7 @@ class LogininView extends GetView<LoginController> {
                   color: AppColors.stroke,
                 ),
               ),
-              labelText: "Password",
+              labelText: Appstring.password,
               labelStyle: TextStyle(color: AppColors.stroke),
               contentPadding: EdgeInsets.fromLTRB(15.0, 4.0, 15.0, 2.0),
               suffixIconColor: AppColors.button,
@@ -193,7 +195,7 @@ class LogininView extends GetView<LoginController> {
               controller.username.text, controller.password.text);
         }
       },
-      child: Text("Login"),
+      child: Text(Appstring.loginButton),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.button,
         foregroundColor: AppColors.white,

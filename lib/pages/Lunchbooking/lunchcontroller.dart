@@ -6,11 +6,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../const/resourceconst.dart';
 import '../../const/stringconst.dart';
-import 'dart:developer' as d;
 
 class LunchController extends GetxController {
   var isbooked = false.obs;
   var isloading = false.obs;
+  RxString selectedValue = "Tea - Morning".obs;
+
+  void setSelectedValue(String value) {
+    selectedValue.value = value;
+  }
 
   get selectedDish => null;
 
@@ -84,6 +88,7 @@ class LunchController extends GetxController {
     var extraoption = await costumfile.firstWhere((item) {
       return item['id'] == 47;
     });
+
 
     var mainfooditem = mainoptions["possible_values"];
     var extrafooditem = extraoption["possible_values"];
@@ -211,7 +216,7 @@ class LunchController extends GetxController {
 
   bool isDateAlreadyBooked = false;
 Future<Map<String, dynamic>> getTodaLunch(BuildContext context) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
   String? userid = await getuserid();
   var filter = 't';
   var currentDate = DateTime.now();

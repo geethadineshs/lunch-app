@@ -4,17 +4,16 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:test_app/const/Appcolor.dart';
 import 'package:test_app/pages/MenuList/menulistcontroller.dart';
-// import 'package:test_app/services/notifi_service.dart';
 import '../../const/stringconst.dart';
 import 'lunchcontroller.dart';
 
 class LunchView extends GetView<LunchController> {
   List<DateTime> bookedDates = [];
 
-  // final NotificationService notificationService = NotificationService();
   LunchView({Key? key}) : super(key: key) {
     controller.init();
   }
+  
   @override
   Widget build(BuildContext context) {
     return Obx(() => Scaffold(
@@ -166,7 +165,10 @@ class LunchView extends GetView<LunchController> {
               items: [
                 for (var data in controller.mainiteams.value)
                   DropdownMenuItem(
-                    child: Text(data),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(data),
+                    ),
                     value: data,
                   ),
               ],

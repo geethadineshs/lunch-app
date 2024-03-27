@@ -199,7 +199,7 @@ class Homecontroller extends GetxController {
   }
 
   prevs_month_lunch_count() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userid = await getuserid();
     var filter = 'lm';
     // https://pm.agilecyber.co.uk/projects/lunch/time_entries?utf8=✓&set_filter=1&sort=spent_on:desc&f[]=spent_on&op[spent_on]=lm&f[]=user_id&op[user_id]==&v[user_id][]=153
@@ -261,7 +261,7 @@ class Homecontroller extends GetxController {
   }
 
   precheck() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userid = await getuserid();
     var filter = 't';
     // https://pm.agilecyber.co.uk/projects/lunch/time_entries?utf8=✓&set_filter=1&sort=spent_on:desc&f[]=spent_on&op[spent_on]=lm&f[]=user_id&op[user_id]==&v[user_id][]=153
@@ -314,7 +314,7 @@ class Homecontroller extends GetxController {
   }
 
   getTodaLunch() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userid = await getuserid();
     var filter = 't';
 

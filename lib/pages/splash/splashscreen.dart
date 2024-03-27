@@ -16,7 +16,7 @@ class Splashview extends GetView<SplashController> {
       body: Center(
         child: Container(
           child: SvgPicture.asset(
-            'assets/acs_logo.svg',
+            'assets/assets/acs_logo_color.png',
             placeholderBuilder: (BuildContext context) =>
                 Container(child: const CircularProgressIndicator()),
           ),

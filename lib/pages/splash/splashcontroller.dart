@@ -25,6 +25,7 @@ class SplashController extends GetxController {
       tz.TZDateTime(tz.local, DateTime.now().year, DateTime.now().month,
           DateTime.now().day, 5, 30),
       platformChannelSpecifics,
+      // ignore: deprecated_member_use
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,

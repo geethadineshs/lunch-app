@@ -2,6 +2,11 @@ import 'package:get/get.dart';
 import 'package:test_app/pages/MenuList/menulistview.dart';
 import 'package:test_app/pages/leaverequest/leaverequestbinding.dart';
 import 'package:test_app/pages/leaverequest/leaverequestview.dart';
+import 'package:test_app/pages/listLeaveRequest/listRequestView.dart';
+import 'package:test_app/pages/listLeaveRequest/listRequestbinding.dart';
+import 'package:test_app/pages/lunchCountAdmin/lunchCountAdmin.dart';
+import 'package:test_app/pages/lunchCountAdmin/lunchCountAdminBinding.dart';
+
 import 'package:test_app/pages/requests/requestbinding.dart';
 import 'package:test_app/pages/requests/requestview.dart';
 import '../pages/Lunchbooking/lunchbinding.dart';
@@ -53,6 +58,16 @@ class Routeconst {
       name: Appstring.leaverequest,
       page: () => LeaveRequestView(),
       binding: LeaveRequestBinging(),
+    ),
+    GetPage(
+      name: Appstring.listleave,
+      page: () => LeaveRequestListView(),
+      binding: LeaveRequestListbinding(),
+    ),
+        GetPage(
+      name: Appstring.lunchcount,
+      page: () => LunchCountingAdminView(),
+      binding: LunchCountingAdminbinding(),
     ),
   ];
 }
