@@ -18,7 +18,6 @@ final ThemeData themeData = ThemeData(
   fontFamily: 'Lato',
 );
 
-
 class AppColors {
   AppColors._(); // this basically makes it so you can instantiate this class
 
@@ -26,10 +25,15 @@ class AppColors {
   static const Color grey = Colors.grey;
   static const Color black = Colors.black;
   static const Color darkBlue = Colors.blue;
-
+  static const Color stroke = Color(0xFFBED9D4);
   static const Color themeColor = Color(0xff4285f4);
   static const Color siteBlue = Color(0xff004C98);
   static const Color siteBluelight = Color(0xff1c7cdc);
+  static const Color backgroundColor = Color(0xFFF0F4F3);
+  static const Color backgroundColorDatePicker =
+      Color.fromARGB(255, 230, 247, 243);
+  static const Color button = Color(0xFF50C2C9);
+  static const Color appBar = Color(0xFF004f67);
   // static const Color success = Colors.green;
   // static const Color success = Colors.green;
 

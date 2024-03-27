@@ -1,12 +1,17 @@
-import 'package:acsfoodapp/pages/Lunchbooking/lunchcontroller.dart';
-import 'package:acsfoodapp/pages/home/homecontroller.dart';
 import 'package:get/get.dart';
+import 'package:test_app/pages/MenuList/menulistcontroller.dart';
+import 'package:test_app/pages/listLeaveRequest/listRequestController.dart';
+import '../Lunchbooking/lunchcontroller.dart';
+import 'homecontroller.dart';
 
 class Homebinging extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => Homecontroller());
     Get.lazyPut(() => LunchController());
+    Get.lazyPut(() => MenuListController());
+
+
 
   }
 }

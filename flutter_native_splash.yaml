@@ -1,3 +1,4 @@
 flutter_native_splash:
-  image: "assets/loginscreenlogo.png"
-  color: "#42a5f5"
+  image: "assets/acs_logo_color.png"
+  color: "#F0F4F3"
+

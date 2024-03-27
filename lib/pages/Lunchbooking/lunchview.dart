@@ -1,178 +1,408 @@
-import 'package:acsfoodapp/const/stringconst.dart';
-import 'package:acsfoodapp/pages/Lunchbooking/lunchcontroller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:test_app/const/Appcolor.dart';
+import 'package:test_app/pages/MenuList/menulistcontroller.dart';
+import '../../const/stringconst.dart';
+import 'lunchcontroller.dart';
 
-import '../../const/Appcolor.dart';
+class LunchView extends GetView<LunchController> {
+  List<DateTime> bookedDates = [];
 
-class LunchView extends GetView<LunchController>{
   LunchView({Key? key}) : super(key: key) {
     controller.init();
   }
-
-  // String dropdownvalue = 'Meals with One Chapati';
-
-  // // List of items in our dropdown menu
-  // var items = [
-  //   "Meals with One Chapati",
-  //   'Chapathi only',
-  // ];
-
+  
   @override
   Widget build(BuildContext context) {
     return Obx(() => Scaffold(
+          backgroundColor: AppColors.backgroundColor,
           appBar: _appbar(),
           body: !controller.isbooked.value
               ? _body(context)
               : _bookedpage(context),
           floatingActionButton: !controller.isbooked.value
-              ? flotingbutton()
+              ? floatingbutton(context)
               : _cancelfoodfloattingbutton(),
         ));
   }
 
   _appbar() {
     return AppBar(
-      title: Text("Book Lunch"),
-      backgroundColor:  AppColors.siteBlue,
+      title: Text(
+        "Book Lunch",
+        style: TextStyle(
+            fontWeight: FontWeight.bold, fontSize: 18, letterSpacing: 1),
+      ),
+      centerTitle: true,
+      backgroundColor: AppColors.appBar,
+      foregroundColor: AppColors.white,
+      actions: [
+        IconButton(
+            color: AppColors.white,
+            onPressed: () {
+              Get.offAllNamed(Appstring.home);
+            },
+            icon: Icon(Icons.home))
+      ],
     );
   }
 
   _body(context) {
-    return Column(
-      children: [
-        _mainmanu(context),
-        _dropdown(),
-        _mainmanu1(context),
-        _dropdown1(),
-        // ListView.builder(itemBuilder: (context, index)
-        // {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          _mainmanu(context),
+          _dropdown(),
+          _mainmanu1(context),
+          _dropdown1(),
+          Padding(
+            padding: const EdgeInsets.only(top: 20, right: 19.0, left: 15),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                border: Border.all(
+                  color: AppColors.stroke,
+                  width: 1.0,
+                ),
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              child: SfDateRangePicker(
+                selectionMode: DateRangePickerSelectionMode.range,
+                selectableDayPredicate: (DateTime date) {
+                  return date.weekday != DateTime.saturday &&
+                      date.weekday != DateTime.sunday;
+                },
+                minDate: DateTime.now(),
+                initialSelectedDate: null,
+                onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+                  selectedDates.clear();
+                  DateTime now = DateTime.now();
+                  int selectedDays = args.value.endDate
+                          .difference(args.value.startDate)
+                          .inDays +
+                      1;
 
-        // }),
-        // ListTile(
-        //     leading: Icon(Icons.rice_bowl_sharp),
-        //     title: Obx(() => Text(controller.mainiteams[0].toString())),
-        //     trailing: Obx(() => Radio(
-        //           value: "riceandchapati",
-        //           groupValue: controller.selected.value,
-        //           onChanged: ((value) {
-        //             controller.selected.value = value.toString();
-        //           }),
-        //         ))),
-        // ListTile(
-        //     leading: Icon(Icons.circle),
-        //     title: Obx(() => Text(controller.mainiteams[1].toString())),
-        //     trailing: Obx(() => Radio(
-        //           value: "ricewithchapathi",
-        //           groupValue: controller.selected.value,
-        //           onChanged: ((value) {
-        //             controller.selected.value = value.toString();
-        //           }),
-        //         ))),
+                  if (selectedDays > 16) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Please choose only 16 days.'),
+                        backgroundColor: AppColors.appBar,
+                      ),
+                    );
 
-        //   Container(
-        //       width: MediaQuery.of(context).size.width,
-        //       height: MediaQuery.of(context).size.height * 0.3,
-        //       child: Obx(() => ListView.builder(
-        //             itemCount: controller.extraiteam.length,
-        //             itemBuilder: (context, index) {
-        //               return ListTile(
-        //                   leading: Icon(Icons.circle),
-        //                   title: Obx(() =>
-        //                       Text(controller.extraiteam[index].toString())),
-        //                   trailing: Obx(() => Radio(
-        //                         value: controller.extraiteam[index].toString(),
-        //                         groupValue: controller.selected.value,
-        //                         onChanged: ((value) {
-        //                           controller.selected.value = value.toString();
-        //                         }),
-        //                       )));
-        //             },
-        //           ))),
-      ],
+                    args.value.startDate =
+                        args.value.endDate.subtract(Duration(days: 15));
+                  }
+
+                  for (int i = args.value.startDate.day;
+                      i <= args.value.endDate.day;
+                      i++) {
+                    DateTime selectedDate = DateTime(args.value.startDate.year,
+                        args.value.startDate.month, i);
+                    if (selectedDate.weekday != DateTime.saturday &&
+                        selectedDate.weekday != DateTime.sunday) {
+                      selectedDates.add(selectedDate);
+                    }
+                  }
+
+                  selectedDateStrings = selectedDates
+                      .map((date) => date.toString().split(' ')[0])
+                      .toList();
+                  print(selectedDateStrings);
+                },
+                selectionColor: AppColors.appBar,
+                rangeSelectionColor: AppColors.stroke,
+                backgroundColor: Colors.white,
+                todayHighlightColor: AppColors.appBar,
+                endRangeSelectionColor: AppColors.appBar,
+                startRangeSelectionColor: AppColors.appBar,
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
-  _mainmanu1(context) {
+
+  Widget _mainmanu1(context) {
     return SizedBox(
-        height: 20,
-        width: MediaQuery.of(context).size.width,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 30, right: 30, top: 5),
+      height: 35,
+      width: MediaQuery.of(context).size.width,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 15, right: 0, top: 10, bottom: 0),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
           child: Text(
-            "Extra Dish",
+            "Tea or coffee preferences",
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
-        ));
+        ),
+      ),
+    );
   }
+
   _dropdown() {
     return Padding(
-      padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
-      child: Obx(() => DropdownButtonFormField(
-        focusColor: Colors.red,
-          decoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                gapPadding: 20,
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                      color: Colors.indigoAccent, width: 1))),
-          items: [
-            for (var data in controller.mainiteams.value)
-              DropdownMenuItem(
-                child: Text(data),
-                value: data,
+      padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
+      child: Obx(
+        () => Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            border: Border.all(
+              color: AppColors.stroke,
+            ),
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 3.0),
+            child: DropdownButtonFormField(
+              decoration: InputDecoration(
+                border: InputBorder.none,
               ),
-          ],
-          onChanged: (value) => controller.selected.value = value as String)),
+              items: [
+                for (var data in controller.mainiteams.value)
+                  DropdownMenuItem(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(data),
+                    ),
+                    value: data,
+                  ),
+              ],
+              onChanged: (value) => controller.selected.value = value as String,
+              style: TextStyle(color: AppColors.black),
+              hint: Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Text(
+                  'Select your dish',
+                  style: TextStyle(
+                    color: AppColors.stroke,
+                    fontSize: 16,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ),
+              icon: Padding(
+                padding: const EdgeInsets.only(top: 2, right: 15.0),
+                child: Icon(Icons.keyboard_arrow_down, color: AppColors.stroke),
+              ),
+              alignment: Alignment.centerLeft,
+            ),
+          ),
+        ),
+      ),
     );
   }
+
   _dropdown1() {
     return Padding(
-      padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
-      child: Obx(() => DropdownButtonFormField(
-          decoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                      color: Colors.indigoAccent, width: 1))),
-          items: [
-            for (var data in controller.extraiteam.value)
-              DropdownMenuItem(
-                child: Text(data),
-                value: data,
+      padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
+      child: Obx(
+        () => Container(
+          // height: 90,
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            border: Border.all(
+              color: AppColors.stroke,
+            ),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: MultiSelectDialogField(
+            items: controller.extraiteam.value
+                .map((data) => MultiSelectItem<String>(data, data))
+                .toList(),
+            listType: MultiSelectListType.CHIP,
+            onSelectionChanged: (value) {
+              controller.selectedItems = value;
+            },
+            onConfirm: (values) {
+              if (values.isNotEmpty) {
+                List<String> selectedValues = List<String>.from(values);
+
+                controller.extra.value =
+                    (selectedValues.isNotEmpty ? selectedValues[0] : null)!;
+
+                print('Selected Values: $selectedValues');
+              }
+            },
+            searchable: false,
+            buttonText: Text(
+              'Select your preferences',
+              style: TextStyle(fontSize: 16, color: AppColors.stroke),
+            ),
+            selectedItemsTextStyle: TextStyle(
+                backgroundColor: AppColors.white, color: AppColors.white),
+            backgroundColor: AppColors.backgroundColor,
+            checkColor: Colors.red,
+            selectedColor: AppColors.appBar,
+            unselectedColor: AppColors.stroke,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.transparent,
               ),
-          ],
-          onChanged: (value) => controller.extra.value = value as String)),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            buttonIcon:
+                Icon(Icons.keyboard_arrow_down, color: AppColors.stroke),
+          ),
+        ),
+      ),
     );
   }
 
-  flotingbutton() {
-    return FloatingActionButton.extended(
+  List<DateTime> selectedDates = [];
+  var selectedDateStrings;
+  bool isToday(String dateString) {
+    var selectedDate = DateTime.parse(dateString);
+    var today = DateTime.now();
+    return selectedDate.year == today.year &&
+        selectedDate.month == today.month &&
+        selectedDate.day == today.day;
+  }
+
+  Widget floatingbutton(BuildContext context) {
+    List<Map<String, dynamic>> deletedEntries =
+        MenuListController().deletedEntries;
+
+    return ElevatedButton(
+      child: Text("Book Lunch"),
       onPressed: () async {
-        var responc = await controller.booklunch();
-        if (responc == 200) {
-          controller.booked();
-          Get.offAndToNamed(Appstring.home);
+        if (selectedDateStrings.isEmpty) {
+          selectedDateStrings = [DateTime.now().toString().split(' ')[0]];
+        }
+        if (isDateInDeletedEntries(selectedDateStrings, deletedEntries)) {
+          showDeletedEntryAlert(context);
+          return;
+        }
+        if (controller.selected.value.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Please select your dish.',
+                style: TextStyle(color: Colors.white, fontSize: 16.0),
+              ),
+              backgroundColor: AppColors.appBar,
+            ),
+          );
+          return;
+        }
+
+        var dateBookingResponse = await controller.getTodaLunch(context);
+
+        if (dateBookingResponse.containsKey('error')) {
+          if (isToday(selectedDateStrings[0])) {
+            showDateAlreadyBookedAlert(context);
+          }
         } else {
-          
+          var isDateAlreadyBooked = dateBookingResponse['isDateAlreadyBooked'];
+
+          if (isToday(selectedDateStrings[0]) && isDateAlreadyBooked) {
+            showDateAlreadyBookedAlert(context);
+          } else {
+            var lunchBookingResponse =
+                await controller.booklunch(selectedDateStrings, deletedEntries);
+
+            if (lunchBookingResponse == 200) {
+              Get.offAllNamed(Appstring.home);
+            } else if (lunchBookingResponse == 409) {
+              showDeletedEntryAlert(context);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Failed to book lunch. Please try again.',
+                    style: TextStyle(color: Colors.white, fontSize: 16.0),
+                  ),
+                  backgroundColor: AppColors.appBar,
+                ),
+              );
+            }
+          }
         }
       },
-      label: Text("Book Lunch"),
-      icon: Icon(Icons.breakfast_dining),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.button,
+        foregroundColor: AppColors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4.0),
+        ),
+        minimumSize: Size(MediaQuery.of(context).size.width * 0.9,
+            MediaQuery.of(context).size.height * 0.075),
+      ),
     );
   }
 
-  _mainmanu(context) {
+  bool isDateInDeletedEntries(
+      List<String> dates, List<Map<String, dynamic>> deletedEntries) {
+    for (var date in dates) {
+      if (deletedEntries.any((entry) => entry['date'] == date)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void showDeletedEntryAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Entry Deleted"),
+          content:
+              Text("You already deleted this entry. Please book in Redmine."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showDateAlreadyBookedAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Date Already Booked'),
+          content: Text('You cannot book on the same date again.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _mainmanu(BuildContext context) {
     return SizedBox(
-        height: 20,
-        width: MediaQuery.of(context).size.width,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 30, right: 30, top: 5),
+      height: 45,
+      width: MediaQuery.of(context).size.width,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 5),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
           child: Text(
             "Select Your Dish",
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            overflow: TextOverflow.ellipsis,
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   _cancelfoodfloattingbutton() {
@@ -188,7 +418,7 @@ class LunchView extends GetView<LunchController>{
   _bookedpage(context) {
     return Center(
       child: Container(
-        color: Colors.blueAccent,
+        color: AppColors.appBar,
         alignment: Alignment.center,
         child: Text(
           "You have booked you meals",
@@ -200,21 +430,4 @@ class LunchView extends GetView<LunchController>{
       ),
     );
   }
-  //   items: list.map<DropdownMenuItem<String>>((String value) {
-  //     return DropdownMenuItem<String>(
-  //       value: value,
-  //       child: Text(value),
-  //     );
-  //   }).toList(),
-  // );
-  _Homefloattingbutton() {
-    return FloatingActionButton.extended(
-      onPressed: () {
-        Get.toNamed(Appstring.home);
-      },
-      label: Text("Back Home"),
-      icon: Icon(Icons.home),
-    );
-  }
-
 }
