@@ -13,7 +13,7 @@ class LunchView extends GetView<LunchController> {
   LunchView({Key? key}) : super(key: key) {
     controller.init();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Obx(() => Scaffold(
@@ -78,10 +78,10 @@ class LunchView extends GetView<LunchController> {
                 initialSelectedDate: null,
                 onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
                   selectedDates.clear();
-                  DateTime now = DateTime.now();
+                  // DateTime now = DateTime.now();
                   int selectedDays = args.value.endDate
-                          .difference(args.value.startDate)
-                          .inDays +
+                          ?.difference(args.value.startDate)
+                          ?.inDays +
                       1;
 
                   if (selectedDays > 16) {
@@ -121,6 +121,10 @@ class LunchView extends GetView<LunchController> {
               ),
             ),
           )
+          , if (controller.loading.value)
+            Center(
+              child: CircularProgressIndicator(),
+            ),
         ],
       ),
     );
@@ -290,37 +294,33 @@ class LunchView extends GetView<LunchController> {
           );
           return;
         }
+        var isbookedonselecteddate =
+            await controller.checkbookingalreadyexist(selectedDateStrings);
 
-        var dateBookingResponse = await controller.getTodaLunch(context);
-
-        if (dateBookingResponse.containsKey('error')) {
-          if (isToday(selectedDateStrings[0])) {
-            showDateAlreadyBookedAlert(context);
-          }
+        print(isbookedonselecteddate["total_count"]);
+        print(isbookedonselecteddate);
+        // var dateBookingResponse = await controller.getTodaLunch(context);
+        if (isbookedonselecteddate["total_count"] != 0) {
+          showDateAlreadyBookedAlert(context);
+          ;
         } else {
-          var isDateAlreadyBooked = dateBookingResponse['isDateAlreadyBooked'];
-
-          if (isToday(selectedDateStrings[0]) && isDateAlreadyBooked) {
-            showDateAlreadyBookedAlert(context);
+          var lunchBookingResponse =
+              await controller.booklunch(selectedDateStrings, deletedEntries);
+          
+          if (lunchBookingResponse == 200) {
+            Get.offAllNamed(Appstring.home);
+          } else if (lunchBookingResponse == 409) {
+            showDeletedEntryAlert(context);
           } else {
-            var lunchBookingResponse =
-                await controller.booklunch(selectedDateStrings, deletedEntries);
-
-            if (lunchBookingResponse == 200) {
-              Get.offAllNamed(Appstring.home);
-            } else if (lunchBookingResponse == 409) {
-              showDeletedEntryAlert(context);
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Failed to book lunch. Please try again.',
-                    style: TextStyle(color: Colors.white, fontSize: 16.0),
-                  ),
-                  backgroundColor: AppColors.appBar,
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Failed to book lunch. Please try again.',
+                  style: TextStyle(color: Colors.white, fontSize: 16.0),
                 ),
-              );
-            }
+                backgroundColor: AppColors.appBar,
+              ),
+            );
           }
         }
       },

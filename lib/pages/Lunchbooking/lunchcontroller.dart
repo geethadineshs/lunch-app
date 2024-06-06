@@ -11,6 +11,7 @@ class LunchController extends GetxController {
   var isbooked = false.obs;
   var isloading = false.obs;
   RxString selectedValue = "Tea - Morning".obs;
+  var loading = false.obs;
 
   void setSelectedValue(String value) {
     selectedValue.value = value;
@@ -35,6 +36,7 @@ class LunchController extends GetxController {
 // Define a variable to hold the selected values
   List<String> selectedValues = [];
   booklunch(selectedDateStrings, deletedEntries) async {
+    this.loading.value = true;
     var foodoption = mainiteams.indexOf(selected.value) + 1;
     var extra = selectedItems;
     print('Selected Values outside widget: $selectedValues');
@@ -45,10 +47,6 @@ class LunchController extends GetxController {
     for (var i in selectedDateStrings) {
       count++;
       var body = jsonEncode(postbody(foodoption, extra, i));
-
-      // print(body.runtimeType);
-      print(body);
-      //  print("Booking date: $i");
       // print("Date: $i");
       try {
         final response = await http.post(
@@ -76,6 +74,7 @@ class LunchController extends GetxController {
         // print("Error while booking date: $i ($e)");
       }
     }
+    this.loading.value = false;
   }
 
   init() async {
@@ -88,7 +87,6 @@ class LunchController extends GetxController {
     var extraoption = await costumfile.firstWhere((item) {
       return item['id'] == 47;
     });
-
 
     var mainfooditem = mainoptions["possible_values"];
     var extrafooditem = extraoption["possible_values"];
@@ -116,7 +114,6 @@ class LunchController extends GetxController {
     startDate,
   ) {
     return {
-    
       "time_entry": {
         "project_id": 342,
         "hours": 0,
@@ -130,9 +127,7 @@ class LunchController extends GetxController {
         ],
         "comments": ""
       }
-    
     };
-    
   }
 
   cancel() async {
@@ -215,57 +210,81 @@ class LunchController extends GetxController {
   }
 
   bool isDateAlreadyBooked = false;
-Future<Map<String, dynamic>> getTodaLunch(BuildContext context) async {
-  // SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? userid = await getuserid();
-  var filter = 't';
-  var currentDate = DateTime.now();
-  var formattedCurrentDate = DateFormat('yyyy-MM-dd').format(currentDate);
+  Future<Map<String, dynamic>> getTodaLunch(BuildContext context) async {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userid = await getuserid();
+    var filter = 't';
+    var currentDate = DateTime.now();
+    var formattedCurrentDate = DateFormat('yyyy-MM-dd').format(currentDate);
 
-  var url = Uri.encodeFull(Resource.baseurl +
-      Resource.lunchcountapi +
-      'sort=spent_on:desc&f[]=spent_on&op[spent_on]=$filter&f[]=user_id&op[user_id]==&v[user_id][]=$userid&f[]=&c[]=spent_on&c[]=user&c[]=activity&c[]=issue&c[]=comments&c[]=hours&c[]=cf_59&c[]=cf_63&c[]=project&group_by=cf_41&t[]=hours&t[]=&spent_type=T');
-  print("url $url");
-  var key = await getusercredential();
+    var url = Uri.encodeFull(Resource.baseurl +
+        Resource.lunchcountapi +
+        'sort=spent_on:desc&f[]=spent_on&op[spent_on]=$filter&f[]=user_id&op[user_id]==&v[user_id][]=$userid&f[]=&c[]=spent_on&c[]=user&c[]=activity&c[]=issue&c[]=comments&c[]=hours&c[]=cf_59&c[]=cf_63&c[]=project&group_by=cf_41&t[]=hours&t[]=&spent_type=T');
+    print("url $url");
+    var key = await getusercredential();
 
-  try {
-    final response = await http.get(Uri.parse(url), headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Basic $key",
-    });
+    try {
+      final response = await http.get(Uri.parse(url), headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Basic $key",
+      });
 
-    if (response.statusCode == 200) {
-      // Parse the response correctly
-      Map<String, dynamic> jsonResponse =
-          json.decode(utf8.decode(response.bodyBytes));
+      if (response.statusCode == 200) {
+        // Parse the response correctly
+        Map<String, dynamic> jsonResponse =
+            json.decode(utf8.decode(response.bodyBytes));
 
-      // Check if today's date is in the response
-      if (jsonResponse['time_entries'].any((entry) =>
-          DateFormat('yyyy-MM-dd').format(DateTime.parse(entry['spent_on'])) ==
-          formattedCurrentDate)) {
-        // Date is already booked, set the flag.
-        print('Date already booked. Show alert message.');
-        
-        // Perform actions or show alerts to inform the user
-        // Example: Show an alert
-        // showDateAlreadyBookedAlert(context);
-        
-        // Alternatively, you can return an error message or throw an exception
-        return {'isDateAlreadyBooked': true};
+        // Check if today's date is in the response
+        if (jsonResponse['time_entries'].any((entry) =>
+            DateFormat('yyyy-MM-dd')
+                .format(DateTime.parse(entry['spent_on'])) ==
+            formattedCurrentDate)) {
+          // Date is already booked, set the flag.
+          print('Date already booked. Show alert message.');
+
+          // Perform actions or show alerts to inform the user
+          // Example: Show an alert
+          // showDateAlreadyBookedAlert(context);
+
+          // Alternatively, you can return an error message or throw an exception
+          return {'isDateAlreadyBooked': true};
+        }
+
+        // Date is not booked
+        return {'isDateAlreadyBooked': false};
+      } else {
+        // Failed to fetch data
+        return {'error': 'Failed to fetch data'};
       }
-
-      // Date is not booked
-      return {'isDateAlreadyBooked': false};
-    } else {
-      // Failed to fetch data
-      return {'error': 'Failed to fetch data'};
+    } catch (e) {
+      print("Exception occurred: $e");
+      return {'error': 'Exception occurred: $e'};
     }
-  } catch (e) {
-    print("Exception occurred: $e");
-    return {'error': 'Exception occurred: $e'};
   }
-}
 
+  checkbookingalreadyexist(selectedDateStrings) async {
+    String? userid = await getuserid();
+    int daterange = selectedDateStrings.length;
+    var enddate = selectedDateStrings[daterange - 1];
+    var start = selectedDateStrings[daterange - daterange];
+    var filter =
+        'sort=spent_on:desc&f[]=spent_on&op[spent_on]=><&v[spent_on][]=$start&v[spent_on][]=$enddate&f[]=user_id&op[user_id]==&v[user_id][]=$userid&f[]=&c[]=spent_on&c[]=user&c[]=hours&c[]=cf_47&c[]=cf_41&group_by=&t[]=hours&t[]=&spent_type=T';
 
-  checkIfDateExists(selectedDateStrings) {}
+    var endpoint =
+        Uri.encodeFull(Resource.baseurl + Resource.lunchcountapi + filter);
+    var key = await getusercredential();
+    try {
+      final responce = await http.get(Uri.parse(endpoint), headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Basic $key",
+      });
+      if (responce.statusCode == 200) {
+        return json.decode(responce.body);
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      return -1;
+    }
+  }
 }
