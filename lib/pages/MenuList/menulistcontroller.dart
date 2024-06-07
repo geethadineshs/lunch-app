@@ -8,8 +8,13 @@ class LunchEntry {
   final int id; // Add ID property
   final String date;
   final String lunchOption;
+  final String teacoffeeoption;
 
-  LunchEntry({required this.id, required this.date, required this.lunchOption});
+  LunchEntry(
+      {required this.id,
+      required this.date,
+      required this.lunchOption,
+      required this.teacoffeeoption});
 }
 
 class MenuListController extends GetxController {
@@ -52,8 +57,7 @@ class MenuListController extends GetxController {
 
     var endpoint = Uri.encodeFull(Resource.baseurl +
         '/projects/lunch/time_entries.json?set_filter=1&sort=spent_on:desc&f[]=spent_on&op[spent_on]=><&v[spent_on][]=$formattedFirstDay&v[spent_on][]=$formattedLastDay&f[]=user_id&op[user_id]==&v[user_id][]=me&f[]=&c[]=spent_on&c[]=user&c[]=activity&c[]=issue&c[]=comments&');
-    print(endpoint);
-
+    
     try {
       final response = await http.get(Uri.parse(endpoint), headers: {
         "Content-Type": "application/json",
@@ -69,18 +73,22 @@ class MenuListController extends GetxController {
           var spentOn = entry['spent_on'];
           var customFields = entry['custom_fields'];
           var lunchOption;
+          var teacoffeeOption;
 
           for (var field in customFields) {
             if (field['name'] == 'Lunch Option') {
               lunchOption = field['value'].toString();
             }
+            if (field['name'] == "Tea/Coffee") {
+              teacoffeeOption = field['value'].toString();
+            }
           }
 
           return LunchEntry(
-            id: entryId,
-            date: spentOn.substring(0, 10),
-            lunchOption: lunchOption,
-          );
+              id: entryId,
+              date: spentOn.substring(0, 10),
+              lunchOption: lunchOption,
+              teacoffeeoption: teacoffeeOption);
         }).toList();
 
         // Update the grouped entries
@@ -88,10 +96,10 @@ class MenuListController extends GetxController {
 
         isLoading.value = false;
       } else {
-        print('API Error: ${response.statusCode}');
+      
       }
     } catch (e) {
-      print('API Error: $e');
+    
     }
   }
 
@@ -115,19 +123,15 @@ class MenuListController extends GetxController {
   Future<void> deleteEntries(int id, String date) async {
     var key = await getusercredential();
     var deleteEndpoint = Uri.parse('${Resource.baseurl}/time_entries/$id.json');
-
-    print('Delete Endpoint for ID $id: $deleteEndpoint');
-
     try {
       final deleteResponse = await http.delete(deleteEndpoint, headers: {
         "Content-Type": "application/json; charset=utf-32",
         "Authorization": "Basic $key",
       });
-      print(
-          'API Response for ID $id: ${deleteResponse.statusCode} - ${deleteResponse.body}');
+  
       if (deleteResponse.statusCode == 204) {
         // Entry deleted successfully
-        print('Entry with ID $id deleted successfully');
+      
 
         // Add the deleted entry details to the list
         deletedEntries.add({
@@ -139,12 +143,11 @@ class MenuListController extends GetxController {
         await precheck();
       } else {
         // Handle the case when the delete request fails
-        print(
-            'Failed to delete entry with ID $id. Status code: ${deleteResponse.statusCode}');
+      
       }
     } catch (e) {
       // Handle exceptions
-      print('Error deleting entry with ID $id: $e');
+     
     }
   }
 
@@ -163,13 +166,13 @@ class MenuListController extends GetxController {
       var date = entryToDelete['date'];
 
       await deleteEntries(id, date);
-      print('Deleted Entries: $deletedEntries');
+    
     } else {
-      print('No entries to delete.');
+    
     }
   }
 
-  List<Map<String, dynamic>> groupLunchEntries(List<LunchEntry>lunchEntries) {
+  List<Map<String, dynamic>> groupLunchEntries(List<LunchEntry> lunchEntries) {
     var groupedEntries = {};
 
     for (var entry in lunchEntries) {
@@ -181,8 +184,8 @@ class MenuListController extends GetxController {
 
       groupedEntries[date]!.add({
         "id": entry.id,
-        "options": entry
-            .lunchOption, // Assuming lunchOption is a property in LunchEntry
+        "options": entry.lunchOption,
+        "teacoffeeoption": entry.teacoffeeoption,
       });
     }
 
@@ -198,7 +201,7 @@ class MenuListController extends GetxController {
     return groupedEntries.entries.map((entry) {
       var date = entry.key;
       var id = entry.value[0]['id'];
-
+      var teacoffee = entry.value[0]['teacoffeeoption'];
       var lunchOptions = entry.value.map((lunchEntry) {
         var description =
             lunchOptionDescriptions[lunchEntry['options']] ?? 'Unknown';
@@ -210,6 +213,7 @@ class MenuListController extends GetxController {
         'date': date,
         'options': lunchOptions,
         'id': id,
+        "teacoffeeoption": teacoffee
       };
     }).toList();
   }
@@ -224,4 +228,10 @@ Future<String?> getusercredential() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var key = prefs.getString('key');
   return key;
+}
+
+String removeBrackets(String text) {
+  // Use regular expressions to remove characters within square brackets
+  var newtext = text.replaceAll('[', '');
+  return newtext.replaceAll(']', '');
 }

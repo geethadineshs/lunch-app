@@ -110,7 +110,7 @@ class LunchView extends GetView<LunchController> {
                   selectedDateStrings = selectedDates
                       .map((date) => date.toString().split(' ')[0])
                       .toList();
-                  print(selectedDateStrings);
+                  
                 },
                 selectionColor: AppColors.appBar,
                 rangeSelectionColor: AppColors.stroke,
@@ -230,7 +230,7 @@ class LunchView extends GetView<LunchController> {
                 controller.extra.value =
                     (selectedValues.isNotEmpty ? selectedValues[0] : null)!;
 
-                print('Selected Values: $selectedValues');
+               
               }
             },
             searchable: false,
@@ -297,8 +297,7 @@ class LunchView extends GetView<LunchController> {
         var isbookedonselecteddate =
             await controller.checkbookingalreadyexist(selectedDateStrings);
 
-        print(isbookedonselecteddate["total_count"]);
-        print(isbookedonselecteddate);
+       
         // var dateBookingResponse = await controller.getTodaLunch(context);
         if (isbookedonselecteddate["total_count"] != 0) {
           showDateAlreadyBookedAlert(context);

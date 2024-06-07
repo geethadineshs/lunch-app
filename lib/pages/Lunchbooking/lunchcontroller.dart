@@ -39,7 +39,7 @@ class LunchController extends GetxController {
     this.loading.value = true;
     var foodoption = mainiteams.indexOf(selected.value) + 1;
     var extra = selectedItems;
-    print('Selected Values outside widget: $selectedValues');
+    
 
     var key = await getusercredential();
     var count = 0;
@@ -90,8 +90,7 @@ class LunchController extends GetxController {
 
     var mainfooditem = mainoptions["possible_values"];
     var extrafooditem = extraoption["possible_values"];
-    print(mainfooditem.length);
-    print(extrafooditem.length);
+   
     for (var item in mainfooditem) {
       var labeitem = item["label"];
       mainiteams.add(labeitem);
@@ -156,7 +155,6 @@ class LunchController extends GetxController {
   }
 
   _menuapi() async {
-    print(_menuapi);
     try {
       final responce = await http.get(
           Uri.parse(
@@ -220,7 +218,7 @@ class LunchController extends GetxController {
     var url = Uri.encodeFull(Resource.baseurl +
         Resource.lunchcountapi +
         'sort=spent_on:desc&f[]=spent_on&op[spent_on]=$filter&f[]=user_id&op[user_id]==&v[user_id][]=$userid&f[]=&c[]=spent_on&c[]=user&c[]=activity&c[]=issue&c[]=comments&c[]=hours&c[]=cf_59&c[]=cf_63&c[]=project&group_by=cf_41&t[]=hours&t[]=&spent_type=T');
-    print("url $url");
+    
     var key = await getusercredential();
 
     try {
@@ -240,7 +238,7 @@ class LunchController extends GetxController {
                 .format(DateTime.parse(entry['spent_on'])) ==
             formattedCurrentDate)) {
           // Date is already booked, set the flag.
-          print('Date already booked. Show alert message.');
+        
 
           // Perform actions or show alerts to inform the user
           // Example: Show an alert
@@ -257,7 +255,7 @@ class LunchController extends GetxController {
         return {'error': 'Failed to fetch data'};
       }
     } catch (e) {
-      print("Exception occurred: $e");
+      
       return {'error': 'Exception occurred: $e'};
     }
   }

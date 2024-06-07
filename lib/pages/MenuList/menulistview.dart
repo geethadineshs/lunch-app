@@ -40,6 +40,8 @@ class MenuListView extends GetView<MenuListController> {
                 return DataTable2(
                   columnSpacing: 16,
                   dataRowHeight: 80.0,
+                  isHorizontalScrollBarVisible: true,
+                  isVerticalScrollBarVisible: true,
                   columns: [
                     DataColumn2(
                       label: Container(
@@ -81,6 +83,25 @@ class MenuListView extends GetView<MenuListController> {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: const Color.fromARGB(255, 10, 10, 10),
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      size: ColumnSize.L,
+                    ),
+                    DataColumn2(
+                      label: Container(
+                        width: double.infinity,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'BrewBites',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: const Color.fromARGB(255, 9, 8, 8),
                                 fontSize: 15.0,
                               ),
                             ),
@@ -138,6 +159,26 @@ class MenuListView extends GetView<MenuListController> {
                                   child: Center(
                                     child: Text(
                                       entry['options'].join(', '),
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                        color: _isDateInPast(entry['date'])
+                                            ? Colors.grey
+                                            : const Color.fromARGB(
+                                                255, 7, 7, 7),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              DataCell(
+                                Container(
+                                  width: double.infinity,
+                                  child: Center(
+                                    child: Text(
+                                      entry['teacoffeeoption'].isEmpty
+                                          ? 'No options available'
+                                          : removeBrackets(
+                                              entry['teacoffeeoption']),
                                       style: TextStyle(
                                         fontSize: 14.0,
                                         color: _isDateInPast(entry['date'])
@@ -250,7 +291,8 @@ class MenuListView extends GetView<MenuListController> {
                                                       );
                                                     } catch (e) {
                                                       // Handle errors
-                                                      print('Error: $e');
+                                                     
+                                                     
                                                     }
                                                   }
                                                 },
