@@ -9,6 +9,12 @@ workflows:
       flutter: stable
       xcode: latest
     scripts:
+      - name: Install Android command-line tools
+        script: |
+          yes | sdkmanager --install "cmdline-tools;latest"
+      - name: Accept Android SDK licenses
+        script: |
+          yes | flutter doctor --android-licenses
       - name: Install dependencies
         script: |
           flutter pub get
@@ -19,6 +25,4 @@ workflows:
         script: |
           flutter build ios --release --no-codesign
     artifacts:
-      - build/app/outputs/flutter-apk/app-*.apk
-      - build/ios/iphoneos/Runner.app
-      - build/ios/ipa/Runner.ipa
+      - build/app/outputs/flutter
