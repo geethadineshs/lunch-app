@@ -8,10 +8,17 @@ workflows:
     environment:
       flutter: stable
       xcode: latest
+      # Specify the Android SDK version explicitly
+      android: latest
     scripts:
-      - name: Install Android command-line tools
+      - name: Install Android SDK command-line tools
         script: |
-          yes | sdkmanager --install "cmdline-tools;latest"
+          # Install command-line tools
+          wget https://dl.google.com/android/repository/commandlinetools-linux-8092744_latest.zip -O cmdline-tools.zip
+          unzip cmdline-tools.zip -d /sdk/cmdline-tools
+          mkdir -p /sdk/cmdline-tools/bin
+          mv /sdk/cmdline-tools/cmdline-tools/* /sdk/cmdline-tools/bin
+          sdkmanager --sdk_root=/sdk --install "cmdline-tools;latest"
       - name: Accept Android SDK licenses
         script: |
           yes | flutter doctor --android-licenses
@@ -25,4 +32,6 @@ workflows:
         script: |
           flutter build ios --release --no-codesign
     artifacts:
-      - build/app/outputs/flutter
+      - build/app/outputs/flutter-apk/app-*.apk
+      - build/ios/iphoneos/Runner.app
+      - build/ios/ipa/Runner.ipa
