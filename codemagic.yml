@@ -5,9 +5,6 @@ workflows:
   flutter-build:
     name: Flutter Build
     max_build_duration: 60
-    triggering:
-      events:
-        - push
     environment:
       flutter: stable
       xcode: latest
